@@ -6,6 +6,12 @@
 - 图表样张：https://claude.ai/artifact/K3bPJqngKgUNyyqntqNj5J（chart-specimens.html）
 - 图表引擎与 `skills/knowledge-chart-studio/assets/engine.js` 是同一份；改引擎时两边一起更新。
 
+## v0.9（2026-10-03）
+- 真实书封：760 本中 573 本找到封面（豆瓣简体优先，找不到用金石堂繁体）
+  - App 书本详情显示真实封面（存在 App 素材库，对照表 `covers/app_assets.json`）
+  - Notion 每本书页面顶端设为封面横幅（模糊背景＋居中书封，图档在 `covers/<页面id>_banner.jpg`，以 GitHub raw 网址引用，分支删除前须先搬移）
+  - 找不到的书继续用自动生成封面
+
 ## v0.8（2026-10-03）
 - 整体改成书桌版面，取代原本的宅院入口与三个房间：
   - 左边：书架选单（心理／成长／灵性各分类），点一下在中间摆出那一格的书
