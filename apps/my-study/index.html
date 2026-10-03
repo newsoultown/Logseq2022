@@ -544,6 +544,7 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 .dshelf .spine.pap::before,.dshelf .spine.pap::after{left:4px;right:4px;height:0;border-top:1px solid rgba(58,46,36,.55);border-bottom:0;opacity:1}
 .dshelf .spine.pap .tt{color:#2a2018;text-shadow:none;opacity:.95}
 .dshelf .spine:hover,.dshelf .spine:focus-visible{box-shadow:0 14px 18px rgba(0,0,0,.55)}
+.dshelf .spine .tt{font-family:"Noto Serif SC","Songti SC","STSong",serif!important;font-weight:600!important;letter-spacing:.02em}
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -1062,7 +1063,7 @@ function initNotion(){
 }
 function connect(){
   if(!NX.mcp)return;setN("loading");
-  loadNotes().then(function(){NX.on=true;setN("on");toast("已连接 Notion：书房换成你的书摘参考库");refreshView();})
+  loadNotes().then(function(){NX.on=true;setN("on");toast("已连接 Notion：书房换成你的书摘参考库");refreshView();prefetchShelves();})
     .catch(function(e){setN("err",nErr(e));toast(nErr(e));});
 }
 function rowToNote(r){var pos=String(r["位置"]||"0-0").split("-"),ch=null;
@@ -1082,14 +1083,28 @@ function loadBookNotes(url){
 function hashIdx(s,n){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)%n;}
 function mkBook(r){var raw=String(r["书名"]||"未命名"),parts=raw.split(/[／\/]/),t=parts[0].trim(),a=(parts.slice(1).join("／")||"").trim(),pal=PAL[hashIdx(raw,PAL.length)];
   return {t:t,a:a||"Notion 书摘参考库",c:pal[0],g:pal[1],intro:(r["主题"]?"主题："+r["主题"]+"。":"")+"来自你的 Notion 书摘参考库。",p:null,ch:"",src:r.url,notion:true,full:raw};}
+var SHK=KEY+".shelf";
+function shCache(){try{return JSON.parse(localStorage.getItem(SHK))||{};}catch(e){return {};}}
+function shSave(cat,rows,more){try{var c=shCache();c[cat]={r:rows,m:more,ts:Date.now()};localStorage.setItem(SHK,JSON.stringify(c));}catch(e){}}
 function loadShelf(cat){
-  var cur=NX.shelf[cat];if(cur&&(cur.state==="ok"||cur.state==="loading"))return Promise.resolve();
-  NX.shelf[cat]={state:"loading",ids:[]};
+  var cur=NX.shelf[cat];if(cur&&(cur.busy||(cur.state==="ok"&&cur.fresh)))return Promise.resolve();
+  if(!cur){var cc=shCache()[cat];
+    if(cc&&cc.r)NX.shelf[cat]={state:"ok",more:!!cc.m,ids:cc.r.map(function(r){if(!NB[r.url])NB[r.url]=mkBook(r);return r.url;})};}
+  var had=NX.shelf[cat]&&NX.shelf[cat].state==="ok";
+  if(!had)NX.shelf[cat]={state:"loading",ids:[]};
+  NX.shelf[cat].busy=true;
   var f=cat==="__none"?{type:"property",property:"大类",propertyType:"multi_select",operator:"is_empty"}:{type:"property",property:"大类",propertyType:"multi_select",operator:"enum_contains",value:{type:"exact",value:cat}};
   return call("notion-query-data-sources",{data:{mode:"rows",data_source_url:NOTION.books,limit:100,filter:{type:"group",operator:"and",filters:[f]}}})
-    .then(function(pl){var ids=((pl&&pl.results)||[]).map(function(r){if(!NB[r.url])NB[r.url]=mkBook(r);return r.url;});NX.shelf[cat]={state:"ok",ids:ids,more:!!(pl&&pl.has_more)};})
-    .catch(function(e){NX.shelf[cat]={state:"err",msg:nErr(e),ids:[]};});
+    .then(function(pl){var rows=((pl&&pl.results)||[]).map(function(r){return {url:r.url,"书名":r["书名"],"主题":r["主题"]};});
+      var ids=rows.map(function(r){var nb=mkBook(r);if(!NB[r.url])NB[r.url]=nb;else{NB[r.url].t=nb.t;NB[r.url].a=nb.a;NB[r.url].full=nb.full;}return r.url;});
+      NX.shelf[cat]={state:"ok",fresh:true,ids:ids,more:!!(pl&&pl.has_more)};shSave(cat,rows,!!(pl&&pl.has_more));})
+    .catch(function(e){if(had){NX.shelf[cat].busy=false;return;}NX.shelf[cat]={state:"err",msg:nErr(e),ids:[]};});
 }
+/* 连上 Notion 后，在背后依序把各书架的书单抓好 */
+function prefetchShelves(){var cats=[];deskShelves().forEach(function(g){g.items.forEach(function(x){if(!x.local&&x.cat!=null&&cats.indexOf(x.cat)<0)cats.push(x.cat);});});
+  var k=0;(function next(){if(!NX.on||k>=cats.length)return;var c=cats[k++],cur=NX.shelf[c];
+    if(cur&&(cur.busy||cur.fresh)){next();return;}
+    loadShelf(c).then(function(){if(current==="desk")renderDesk();setTimeout(next,150);});})();}
 /* Notion 页面 Markdown → 可阅读的段落 */
 function cleanMd(s){return s.replace(/\{(color|toggle)="[^"]*"[^}]*\}/g,"").replace(/<mention-[a-z-]+[^>]*>([^<]*)<\/mention-[a-z-]+>/g,"$1").replace(/<mention-[a-z-]+[^>]*\/>/g,"")
   .replace(/<br\s*\/?>/g," ").replace(/\[\^[^\]]*\]/g,"").replace(/\[([^\]]*)\]\([^)]*\)/g,"$1").replace(/\*\*/g,"").replace(/(^|[\s（(「])\*([^*\n]+)\*/g,"$1$2").replace(/`/g,"")
