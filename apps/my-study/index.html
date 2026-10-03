@@ -529,7 +529,7 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 .dshelf .spine.lea{background:
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .45 0 0 0 0 .4 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),
   linear-gradient(90deg,rgba(0,0,0,.42),rgba(0,0,0,.08) 14%,rgba(255,235,200,.05) 45%,rgba(0,0,0,.1) 75%,rgba(0,0,0,.45)),
-  color-mix(in srgb,var(--c) 72%,#3b2b1f);
+  color-mix(in srgb,var(--c) 86%,#3b2b1f);
   box-shadow:0 6px 10px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.35),inset 0 0 6px rgba(0,0,0,.45)}
 .dshelf .spine.lea::before,.dshelf .spine.lea::after{left:0;right:0;height:7px;border:0;opacity:1;
   background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(255,230,190,.14) 45%,rgba(0,0,0,.4));box-shadow:0 1px 0 rgba(0,0,0,.25)}
@@ -2081,7 +2081,7 @@ function shelfBoard(x){if(!x)return pinBoard();
     var hs=0;for(var z=0;z<bid.length;z++)hs=(hs*31+bid.charCodeAt(z))>>>0;var pap=false,pc=LEATHERS[hs%LEATHERS.length];
     h+='<div class="sl"><button class="spine '+(pap?'pap':'lea')+'" data-book="'+esc(bid)+'" style="--w:'+w+'px;--h:'+hh+'px;--c:'+pc+';--gilt:'+(pap?"#3a2e24":"#c8ad78")+'" aria-label="《'+esc(bk.t)+'》"><span class="tt'+(two?' two':'')+'">'+esc(t)+'</span></button></div>';});
   return h+'</div>';}
-var LEATHERS=["#6b2f2a","#5a3a24","#3f4a2e","#2f4640","#34405a","#4a3352","#6a4426","#57302f","#3c3a2a","#2c3c4a"];
+var LEATHERS=["#7a2c28","#7a4a22","#4e5a28","#22503f","#26455f","#3a3a6a","#57325e","#6e2e44","#2c5656","#5e4a2a"];
 function pinWires(){var bd=$("#dkBoard"),sv=bd&&$("svg.w",bd);if(!sv||getComputedStyle(sv).display==="none")return;var now=$(".pin.now",bd);if(!now)return;
   function c(e){var x=0,y=0,o=e;while(o&&o!==bd){x+=o.offsetLeft;y+=o.offsetTop;o=o.offsetParent;}return {x:x+e.offsetWidth/2,y:y+e.offsetHeight/2};}
   var a=c(now),h="";sv.setAttribute("viewBox","0 0 "+bd.offsetWidth+" "+bd.offsetHeight);
