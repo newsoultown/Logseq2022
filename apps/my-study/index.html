@@ -521,6 +521,27 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   .dshelf{--sk:.56;padding:0 2px}.dshelf .sl{padding:0 2px 16px}.dshelf .spine .tt{font-size:13px;letter-spacing:0}.dshelf .spine .tt.two{font-size:12px}
   .dk-surface{grid-template-columns:1fr;padding:14px}.nbk{grid-template-columns:1fr}.nbk::after{display:none}.nbk .pg+.pg{padding-top:0}
 }
+
+/* 复古书脊：皮革／纸面 */
+.dshelf .spine{border-radius:2px;background-blend-mode:multiply,normal,normal}
+.dshelf .spine.lea{background:
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .45 0 0 0 0 .4 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"),
+  linear-gradient(90deg,rgba(0,0,0,.42),rgba(0,0,0,.08) 14%,rgba(255,235,200,.05) 45%,rgba(0,0,0,.1) 75%,rgba(0,0,0,.45)),
+  color-mix(in srgb,var(--c) 62%,#3b2b1f);
+  box-shadow:0 6px 10px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.35),inset 0 0 6px rgba(0,0,0,.45)}
+.dshelf .spine.lea::before,.dshelf .spine.lea::after{left:0;right:0;height:7px;border:0;opacity:1;
+  background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(255,230,190,.14) 45%,rgba(0,0,0,.4));box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.dshelf .spine.lea .tt{color:var(--gilt);opacity:.88;text-shadow:0 -1px 0 rgba(0,0,0,.55),0 1px 0 rgba(255,230,180,.08)}
+.dshelf .spine.pap{background:
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .28 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)'/%3E%3C/svg%3E"),
+  linear-gradient(90deg,rgba(60,40,20,.28),rgba(60,40,20,0) 12%,rgba(60,40,20,0) 85%,rgba(60,40,20,.32)),
+  radial-gradient(ellipse 60% 18% at 40% 70%,rgba(120,85,40,.14),transparent 70%),
+  linear-gradient(180deg,rgba(110,80,40,.22),rgba(110,80,40,0) 18%,rgba(110,80,40,0) 82%,rgba(110,80,40,.26)),
+  var(--c);
+  box-shadow:0 6px 10px rgba(0,0,0,.45),inset 0 0 0 1px rgba(70,50,30,.35)}
+.dshelf .spine.pap::before,.dshelf .spine.pap::after{left:4px;right:4px;height:0;border-top:1px solid rgba(58,46,36,.55);border-bottom:0;opacity:1}
+.dshelf .spine.pap .tt{color:var(--gilt);text-shadow:none;opacity:.85}
+.dshelf .spine:hover,.dshelf .spine:focus-visible{box-shadow:0 14px 18px rgba(0,0,0,.55)}
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -2040,8 +2061,10 @@ function shelfBoard(x){if(!x)return pinBoard();
   else if(!x.ids.length)h+='<div class="shelf-msg">这一类还没有书</div>';
   else x.ids.forEach(function(bid,k){var bk=book(bid);if(!bk)return;var t=spineTitle(bk.t),n=t.length;if(n>12){t=t.slice(0,12);n=12;}
     var two=n>6,w=two?84:Math.max(58,Math.min(66,40+n*3)),hh=Math.max([236,252,228,246,260][(bid.length+k)%5],two?280:0);
-    h+='<div class="sl"><button class="spine" data-book="'+esc(bid)+'" style="--w:'+w+'px;--h:'+hh+'px;--c:'+bk.c+';--gilt:'+(bk.g||"#e0c27a")+'" aria-label="《'+esc(bk.t)+'》"><span class="tt'+(two?' two':'')+'">'+esc(t)+'</span></button></div>';});
+    var hs=0;for(var z=0;z<bid.length;z++)hs=(hs*31+bid.charCodeAt(z))>>>0;var pap=hs%3===0,pc=PAPERS[hs%PAPERS.length];
+    h+='<div class="sl"><button class="spine '+(pap?'pap':'lea')+'" data-book="'+esc(bid)+'" style="--w:'+w+'px;--h:'+hh+'px;--c:'+(pap?pc:bk.c)+';--gilt:'+(pap?"#3a2e24":"#c8ad78")+'" aria-label="《'+esc(bk.t)+'》"><span class="tt'+(two?' two':'')+'">'+esc(t)+'</span></button></div>';});
   return h+'</div>';}
+var PAPERS=["#bcab8a","#a68f6f","#999c82","#b2a58c","#8f9486","#b09979"];
 function pinWires(){var bd=$("#dkBoard"),sv=bd&&$("svg.w",bd);if(!sv||getComputedStyle(sv).display==="none")return;var now=$(".pin.now",bd);if(!now)return;
   function c(e){var x=0,y=0,o=e;while(o&&o!==bd){x+=o.offsetLeft;y+=o.offsetTop;o=o.offsetParent;}return {x:x+e.offsetWidth/2,y:y+e.offsetHeight/2};}
   var a=c(now),h="";sv.setAttribute("viewBox","0 0 "+bd.offsetWidth+" "+bd.offsetHeight);
