@@ -475,8 +475,12 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 .dk-shelfhead h2{font-family:var(--f-li);font-weight:400;font-size:30px;margin:0;color:var(--cream)}
 .dk-shelfhead span{color:rgba(239,232,216,.6)}
 .dk-shelfhead button{margin-left:auto;color:var(--cream);border:1px solid rgba(239,232,216,.3);border-radius:999px;padding:5px 14px;font-size:14px}
-.dshelf{display:flex;flex-wrap:wrap;align-content:flex-start;padding:0 8px;background:repeating-linear-gradient(180deg,transparent 0,transparent 300px,#5b4331 300px,#6a4f3a 306px,#3d2c20 316px)}
-.dshelf .sl{height:316px;display:flex;align-items:flex-end;padding:0 4px 16px}
+.dshelf{--sk:.72;--row:calc(316px * var(--sk) + 10px);display:flex;flex-wrap:wrap;align-content:flex-start;padding:0 8px;background:repeating-linear-gradient(180deg,transparent 0,transparent calc(var(--row) - 16px),#5b4331 calc(var(--row) - 16px),#6a4f3a calc(var(--row) - 10px),#3d2c20 var(--row))}
+.dshelf .sl{height:var(--row);display:flex;align-items:flex-end;padding:0 3px 16px}
+.dshelf .spine{width:calc(var(--w) * var(--sk));height:calc(var(--h) * var(--sk))}
+.dshelf .spine .tt{font-size:16px;letter-spacing:.04em;line-height:1.1;padding:0 3px}.dshelf .spine .tt.two{font-size:14px;letter-spacing:0;column-gap:2px}
+.dshelf .spine::before,.dshelf .spine::after{height:4px}
+.dshelf .spine:hover,.dshelf .spine:focus-visible{transform:translateY(-8px)}
 .dshelf .shelf-msg{width:100%;padding:60px 0;text-align:center;color:rgba(239,232,216,.75)}
 .dk-cab{display:grid;gap:10px}
 .dk-grid{grid-template-rows:auto auto 1fr}.dk-side{grid-column:1;grid-row:1/span 3}.dk-board{grid-column:2;grid-row:1}.dk-cab{grid-column:3;grid-row:1/span 3}.dk-surface{grid-column:2;grid-row:2}
@@ -514,6 +518,7 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   .dk-side h5{display:none}.dk-side button{width:auto;flex:none;padding:7px 10px;font-size:15px}.dk-side button .n{display:none}
   .dk-board{padding:16px;min-height:0}.pins{grid-template-columns:1fr 1fr;gap:20px 14px}.pin.now{grid-column:1/-1;grid-row:1;margin:0}.pin b{font-size:19px}.pin.now b{font-size:26px}
   .dk-board>svg.w{display:none}
+  .dshelf{--sk:.56;padding:0 2px}.dshelf .sl{padding:0 2px 16px}.dshelf .spine .tt{font-size:13px;letter-spacing:0}.dshelf .spine .tt.two{font-size:12px}
   .dk-surface{grid-template-columns:1fr;padding:14px}.nbk{grid-template-columns:1fr}.nbk::after{display:none}.nbk .pg+.pg{padding-top:0}
 }
 </style>
@@ -1362,8 +1367,8 @@ function shelfHTML(id,sh){
   if(!sh.local&&(sh.state==="loading"||sh.state==="idle"))h+='<div class="shelf-msg">正在从 Notion 取书…</div>';
   else if(!sh.local&&sh.state==="err")h+='<div class="shelf-msg">'+esc(sh.msg)+'<br><button class="btn" data-retry="'+esc(sh.cat)+'" style="margin-top:10px">重试</button></div>';
   else if(!sh.ids.length)h+='<div class="shelf-msg">这一类还没有书</div>';
-  sh.ids.forEach(function(bid,k){var bk=book(bid);if(!bk)return;var t=spineTitle(bk.t),n=t.length;if(n>16){t=t.slice(0,15)+"…";n=16;}
-    var two=n>7,w=two?84:Math.max(58,Math.min(66,40+n*3)),hh=Math.max([236,252,228,246,260][(bid.length+k)%5],two?280:0);
+  sh.ids.forEach(function(bid,k){var bk=book(bid);if(!bk)return;var t=spineTitle(bk.t),n=t.length;if(n>12){t=t.slice(0,12);n=12;}
+    var two=n>6,w=two?84:Math.max(58,Math.min(66,40+n*3)),hh=Math.max([236,252,228,246,260][(bid.length+k)%5],two?280:0);
     h+='<button class="spine" data-book="'+esc(bid)+'" style="--w:'+w+'px;--h:'+hh+'px;--c:'+bk.c+';--gilt:'+(bk.g||"#e0c27a")+'" aria-label="《'+esc(bk.t)+'》"><span class="tt'+(two?' two':'')+'">'+esc(t)+'</span></button>';});
   if(sh.local)h+='<button class="slot" data-add="1">＋<br>放一本书</button>';
   h+='</div><div class="board"></div></div>';
@@ -2033,8 +2038,8 @@ function shelfBoard(x){if(!x)return pinBoard();
   if(!x.local&&(x.state==="loading"||x.state==="idle"))h+='<div class="shelf-msg">正在从 Notion 取书…</div>';
   else if(!x.local&&x.state==="err")h+='<div class="shelf-msg">'+esc(x.msg)+'</div>';
   else if(!x.ids.length)h+='<div class="shelf-msg">这一类还没有书</div>';
-  else x.ids.forEach(function(bid,k){var bk=book(bid);if(!bk)return;var t=spineTitle(bk.t),n=t.length;if(n>16){t=t.slice(0,15)+"…";n=16;}
-    var two=n>7,w=two?84:Math.max(58,Math.min(66,40+n*3)),hh=Math.max([236,252,228,246,260][(bid.length+k)%5],two?280:0);
+  else x.ids.forEach(function(bid,k){var bk=book(bid);if(!bk)return;var t=spineTitle(bk.t),n=t.length;if(n>12){t=t.slice(0,12);n=12;}
+    var two=n>6,w=two?84:Math.max(58,Math.min(66,40+n*3)),hh=Math.max([236,252,228,246,260][(bid.length+k)%5],two?280:0);
     h+='<div class="sl"><button class="spine" data-book="'+esc(bid)+'" style="--w:'+w+'px;--h:'+hh+'px;--c:'+bk.c+';--gilt:'+(bk.g||"#e0c27a")+'" aria-label="《'+esc(bk.t)+'》"><span class="tt'+(two?' two':'')+'">'+esc(t)+'</span></button></div>';});
   return h+'</div>';}
 function pinWires(){var bd=$("#dkBoard"),sv=bd&&$("svg.w",bd);if(!sv||getComputedStyle(sv).display==="none")return;var now=$(".pin.now",bd);if(!now)return;
