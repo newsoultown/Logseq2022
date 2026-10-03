@@ -545,6 +545,11 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 .dshelf .spine.pap .tt{color:#2a2018;text-shadow:none;opacity:.95}
 .dshelf .spine:hover,.dshelf .spine:focus-visible{box-shadow:0 14px 18px rgba(0,0,0,.55)}
 .dshelf .spine .tt{font-family:"Noto Serif SC","Songti SC","STSong",serif!important;font-weight:600!important;letter-spacing:.02em}
+.cover.real{background:#222;width:150px;aspect-ratio:auto;transform:rotateY(-14deg)}
+.cover.real::before,.cover.real::after{display:none}
+.cover.real img{display:block;width:100%;height:auto;border-radius:2px 5px 5px 2px}
+@media (max-width:520px){.cover.real{width:140px}}
+.cover b{font-family:"Noto Serif SC","Songti SC",serif!important;font-weight:600}
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -1431,7 +1436,8 @@ $("#modal").addEventListener("click",function(e){if(e.target.id==="modal")closeM
 document.addEventListener("keydown",function(e){if(e.key==="Escape"){closeModal();hideSel();closeAside();}});
 function bookModal(bid){
   var bk=book(bid),links=backlinks(bid),cnt=isN(bid)?NX.notes.filter(function(n){return n.book===bid;}).length:links.length;
-  var h='<div class="bk"><div class="cover3d"><div class="cover" style="--c:'+bk.c+';--gilt:'+(bk.g||"#e0c27a")+'"><b>'+esc(bk.t.length>8?bk.t.slice(0,8):bk.t)+'</b></div></div><div style="min-width:0"><h2>《'+esc(bk.t)+'》</h2><div class="who">'+esc(bk.a)+'</div><p>'+esc(bk.intro||"")+'</p>'+
+  var cu=coverOf(bk),ct=spineTitle(bk.t);
+  var h='<div class="bk"><div class="cover3d">'+(cu?'<div class="cover real"><img src="'+esc(cu)+'" alt="《'+esc(bk.t)+'》封面"></div>':'<div class="cover" style="--c:'+bk.c+';--gilt:'+(bk.g||"#e0c27a")+'"><b>'+esc(ct.length>8?ct.slice(0,8):ct)+'</b></div>')+'</div><div style="min-width:0"><h2>《'+esc(bk.t)+'》</h2><div class="who">'+esc(bk.a)+'</div><p>'+esc(bk.intro||"")+'</p>'+
     (cnt?'<p style="color:var(--mist);font-size:13px;margin-top:10px">已有 '+cnt+' 笔划线与心得</p>':'')+
     (bk.src?'<p style="margin-top:8px;font-size:13px"><a href="'+esc(bk.src)+'" target="_blank" rel="noopener" style="color:var(--moon)">在 Notion 打开 ›</a></p>':'')+'</div></div>';
   var can=bk.p||bk.notion;
@@ -2097,6 +2103,9 @@ function notesModal(){var ns=myNotes();
   openModal('<h2 class="t">我的心得与划线</h2><div class="sub">'+ns.length+' 则 · 点「前往」回到那一段</div><div class="notes-list">'+(ns.length?ns.slice(0,80).map(function(n,i){return '<div class="it"><div><p>'+(n.hl?'<span style="color:var(--moon)">划线　</span>':'')+esc(n.text)+'</p><small>《'+esc(n.bt)+'》第 '+((+n.p||0)+1)+' 段</small></div><button class="btn" data-go="'+i+'">前往</button></div>';}).join(""):'<p class="sub">还没有心得。读书时点任何一段，就能在右侧写下想法。</p>')+'</div><div class="actions"><button class="btn" id="nmClose">关闭</button></div>');
   $("#nmClose").onclick=closeModal;
   $$("[data-go]").forEach(function(b){b.onclick=function(){var n=ns[+b.dataset.go];closeModal();if(!book(n.book))ensureBook({id:n.book,t:n.bt,notion:true});openReader(n.book,n.p);};});}
+/* 真实书封：key 为 Notion 页面 id，值为本 App 素材库网址 */
+var COVERS={/*COVERS*/"3e5af2dae7b581dfa3b4f83843fa4f7b":"/_blob/23cd623bc83ddad924752df225343b09"};
+function coverOf(bk){var m=String(bk&&bk.src||"").replace(/-/g,"").match(/[0-9a-f]{32}/);return m?COVERS[m[0]]||null:null;}
 function renderCourt(){renderDesk();}
 function renderRoom(){renderDesk();}
 
