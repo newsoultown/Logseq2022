@@ -564,6 +564,10 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   '.kcs.narrow .kcs-fl{grid-auto-flow:row;gap:8px}.kcs.narrow .kcs-fs{grid-template-columns:64px 1fr;justify-items:start;text-align:left;align-items:center;column-gap:12px}' +
   '.kcs.narrow .kcs-rib,.kcs.narrow .kcs-fs:first-child .kcs-rib{grid-column:1/-1;min-height:54px;clip-path:polygon(0 0,100% 0,100% 72%,52% 100%,48% 100%,0 72%);padding:4px 0 10px}' +
   /* list (cycle/radial 窄版、通用编号列表) */
+  '.kcs-split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(18px,3vw,36px);align-items:center}.kcs-fig svg{max-height:500px;margin:0 auto}' +
+  '.kcs.narrow .kcs-split{grid-template-columns:1fr;gap:14px}.kcs.narrow .kcs-fig svg{max-width:400px}' +
+  '.kcs-ol.v{grid-template-columns:1fr;margin:0;gap:14px}.kcs-ol.v b{font-size:1.15em}.kcs-ol.v span{font-size:1.02em}' +
+  '.kcs-note{margin-top:18px;border:2px solid var(--c1);border-radius:12px;padding:12px 16px;background:color-mix(in srgb,var(--c1) 8%,var(--paper))}.kcs-note b{display:block;font-size:1.12em}.kcs-note span{color:var(--muted)}' +
   '.kcs-ol{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}' +
   '.kcs-ol li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}.kcs-ol .n{width:32px;height:32px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:700;font-variant-numeric:tabular-nums}' +
   '.kcs-ol b{display:block;font-size:1.08em}.kcs-ol span{color:var(--muted)}' +
@@ -650,39 +654,30 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   }
 
   R.logic = function (d, el, ctx) {
-    var it = d.items || [], p = ctx.pal, narrow = ctx.narrow, s;
-    if (it.length === 3) {
-      var W = narrow ? 420 : 1000, H = narrow ? (d.note ? 620 : 470) : 520, r = narrow ? 80 : 92;
-      var pts = narrow ? [[210, 120], [105, 310], [315, 310]] : [[380, 130], [250, 350], [510, 350]];
-      s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(d.title) + '">' + BLUR;
-      var cx = narrow ? 210 : 380, cy = narrow ? 245 : 275;
-      s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + (narrow ? 120 : 150) + '" fill="' + p.c[0] + '" fill-opacity=".06"/>';
-      s += '<text x="' + cx + '" y="' + (cy + 12) + '" text-anchor="middle" font-family="Noto Serif SC,serif" font-weight="900" font-size="' + (narrow ? 28 : 34) + '" fill="' + p.ink + '">' + esc(d.center || "") + "</text>";
-      it.forEach(function (x, i) {
-        s += sphere("l" + i, pts[i][0], pts[i][1], r, p.c[i % 6], [{ t: (i + 1 < 10 ? "0" : "") + (i + 1), s: narrow ? 19 : 22, w: 900 }, { t: x.title, s: narrow ? 22 : 26 }, { t: x.sub || "", s: 17, w: 400, o: .92 }], 22);
-      });
-      if (d.note) {
-        if (!narrow) {
-          s += '<path d="M640 275H730" stroke="' + p.muted + '" stroke-width="2" stroke-dasharray="6 6"/><path d="M722 267 734 275 722 283" fill="none" stroke="' + p.muted + '" stroke-width="2"/>';
-          s += '<rect x="750" y="195" width="220" height="160" rx="18" fill="' + p.c[0] + '" fill-opacity=".08" stroke="' + p.c[0] + '" stroke-width="2"/>';
-          s += noteText(860, 250, d.note, p, 22);
-        } else {
-          s += '<rect x="30" y="440" width="360" height="160" rx="18" fill="' + p.c[0] + '" fill-opacity=".08" stroke="' + p.c[0] + '" stroke-width="2"/>';
-          s += noteText(210, 488, d.note, p, 21);
-        }
-      }
-      return s + "</svg>";
+    var it = d.items || [], p = ctx.pal, n = it.length, s;
+    if (n === 3) {
+      var pts = [[260, 118], [138, 326], [382, 326]];
+      s = '<svg viewBox="0 0 520 452" role="img" aria-label="' + esc(d.title) + '">' + BLUR;
+      s += '<circle cx="260" cy="257" r="150" fill="' + p.c[0] + '" fill-opacity=".07"/>';
+      s += '<text x="260" y="268" text-anchor="middle" font-family="Noto Serif SC,serif" font-weight="900" font-size="30" fill="' + p.ink + '">' + esc(d.center || "") + "</text>";
+      it.forEach(function (x, i) { s += sphere("l" + i, pts[i][0], pts[i][1], 96, p.c[i % 6], [{ t: "0" + (i + 1), s: 22, w: 900, o: .85 }, { t: x.title, s: x.title.length > 4 ? 24 : 28 }], 26); });
+      s += "</svg>";
+    } else {
+      var W = 540, cx = 270, cy = 270, RR = 186;
+      s = '<svg viewBox="0 0 ' + W + " " + W + '" role="img" aria-label="' + esc(d.title) + '">' + BLUR;
+      it.forEach(function (x, i) { var a = -Math.PI / 2 + i * 2 * Math.PI / n; s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + (cx + Math.cos(a) * RR) + '" y2="' + (cy + Math.sin(a) * RR) + '" stroke="' + p.c[i % 6] + '" stroke-width="2" stroke-dasharray="4 6" opacity=".7"/>'; });
+      s += sphere("hub", cx, cy, 78, p.ink, [{ t: d.center || "", s: (d.center || "").length > 3 ? 24 : 28, w: 900 }], 26);
+      it.forEach(function (x, i) { var a = -Math.PI / 2 + i * 2 * Math.PI / n; s += sphere("o" + i, cx + Math.cos(a) * RR, cy + Math.sin(a) * RR, 66, p.c[i % 6], [{ t: x.title, s: x.title.length > 3 ? 21 : 25 }], 24); });
+      s += "</svg>";
     }
-    /* 4–6 项：中心球＋外圈 */
-    var n = it.length, W2 = narrow ? 420 : 900, H2 = narrow ? 460 : 560, cx2 = W2 / 2, cy2 = H2 / 2, RR = narrow ? 150 : 200, r2 = narrow ? 50 : 64;
-    s = '<svg viewBox="0 0 ' + W2 + " " + H2 + '" role="img" aria-label="' + esc(d.title) + '">' + BLUR;
-    it.forEach(function (x, i) { var a = -Math.PI / 2 + i * 2 * Math.PI / n, X = cx2 + Math.cos(a) * RR, Y = cy2 + Math.sin(a) * RR; s += '<line x1="' + cx2 + '" y1="' + cy2 + '" x2="' + X + '" y2="' + Y + '" stroke="' + p.c[i % 6] + '" stroke-width="2" stroke-dasharray="4 6" opacity=".7"/>'; });
-    s += sphere("hub", cx2, cy2, narrow ? 62 : 80, p.ink, [{ t: d.center || "", s: narrow ? 21 : 26, w: 900 }], 24);
-    it.forEach(function (x, i) { var a = -Math.PI / 2 + i * 2 * Math.PI / n, X = cx2 + Math.cos(a) * RR, Y = cy2 + Math.sin(a) * RR; s += sphere("o" + i, X, Y, r2, p.c[i % 6], narrow ? [{ t: x.title, s: 17 }] : [{ t: x.title, s: 20 }, { t: x.sub || "", s: 15, w: 400, o: .92 }], 18); });
-    s += "</svg>";
-    if (narrow) s += listHTML(it.map(function (x) { return { label: x.title, desc: x.sub }; }));
-    return s;
+    var side = sideList(it.map(function (x) { return { label: x.title, desc: x.sub }; }));
+    if (d.note && n === 3) side += '<div class="kcs-note"><b>' + esc(String(d.note.title || "").replace(/\n/g, "")) + "</b>" + (d.note.sub ? "<span>" + esc(d.note.sub) + "</span>" : "") + "</div>";
+    return split(s, side);
   };
+  function split(fig, side) { return '<div class="kcs-split"><div class="kcs-fig">' + fig + '</div><div class="kcs-aside">' + side + "</div></div>"; }
+  function sideList(items) {
+    return '<ol class="kcs-ol v">' + items.map(function (x, i) { return '<li style="--c:' + cvar(i) + '"><span class="n">' + (i + 1) + "</span><div><b>" + esc(x.label) + "</b>" + (x.desc ? "<span>" + esc(x.desc) + "</span>" : "") + "</div></li>"; }).join("") + "</ol>";
+  }
   function noteText(x, y, note, p, fs) {
     var lines = String(note.title || "").split("\n"), s = "";
     lines.forEach(function (l, i) { s += '<text x="' + x + '" y="' + (y + i * (fs + 12)) + '" text-anchor="middle" font-family="Noto Sans SC,sans-serif" font-weight="700" font-size="' + fs + '" fill="' + p.ink + '">' + esc(l) + "</text>"; });
@@ -698,17 +693,17 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   };
 
   R.cycle = function (d, el, ctx) {
-    var st = d.steps || [], n = st.length, p = ctx.pal, narrow = ctx.narrow, W = narrow ? 420 : 640, H = narrow ? 420 : 520, cx = W / 2, cy = H / 2, RR = narrow ? 140 : 180, r = narrow ? 50 : 62;
-    var s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(d.title) + '">' + BLUR + '<defs><marker id="kcsar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="' + p.muted + '"/></marker></defs>';
+    var st = d.steps || [], n = st.length, p = ctx.pal, W = 540, cx = 270, cy = 270, RR = 180, r = 70;
+    var s = '<svg viewBox="0 0 ' + W + " " + W + '" role="img" aria-label="' + esc(d.title) + '">' + BLUR + '<defs><marker id="kcsar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="' + p.muted + '"/></marker></defs>';
     st.forEach(function (x, i) {
-      var a = -Math.PI / 2 + i * 2 * Math.PI / n, a2 = -Math.PI / 2 + (i + 1) * 2 * Math.PI / n, off = (r + 18) / RR;
+      var a = -Math.PI / 2 + i * 2 * Math.PI / n, a2 = -Math.PI / 2 + (i + 1) * 2 * Math.PI / n, off = (r + 16) / RR;
       var sx = cx + Math.cos(a + off) * RR, sy = cy + Math.sin(a + off) * RR, ex = cx + Math.cos(a2 - off) * RR, ey = cy + Math.sin(a2 - off) * RR;
-      s += '<path d="M' + sx + " " + sy + " A " + RR + " " + RR + " 0 0 1 " + ex + " " + ey + '" fill="none" stroke="' + p.muted + '" stroke-width="2.2" marker-end="url(#kcsar)"/>';
+      s += '<path d="M' + sx + " " + sy + " A " + RR + " " + RR + " 0 0 1 " + ex + " " + ey + '" fill="none" stroke="' + p.muted + '" stroke-width="2.4" marker-end="url(#kcsar)"/>';
     });
-    if (d.center) s += '<text x="' + cx + '" y="' + (cy + 10) + '" text-anchor="middle" font-family="Noto Serif SC,serif" font-weight="900" font-size="' + (narrow ? 24 : 30) + '" fill="' + p.ink + '">' + esc(d.center) + "</text>";
-    st.forEach(function (x, i) { var a = -Math.PI / 2 + i * 2 * Math.PI / n; s += sphere("c" + i, cx + Math.cos(a) * RR, cy + Math.sin(a) * RR, r, p.c[i % 6], [{ t: x.label, s: narrow ? 17 : 20 }], 20); });
+    if (d.center) s += '<text x="' + cx + '" y="' + (cy + 11) + '" text-anchor="middle" font-family="Noto Serif SC,serif" font-weight="900" font-size="' + (d.center.length > 4 ? 26 : 32) + '" fill="' + p.ink + '">' + esc(d.center) + "</text>";
+    st.forEach(function (x, i) { var a = -Math.PI / 2 + i * 2 * Math.PI / n; s += sphere("c" + i, cx + Math.cos(a) * RR, cy + Math.sin(a) * RR, r, p.c[i % 6], [{ t: x.label, s: x.label.length > 3 ? 21 : 25 }], 24); });
     s += "</svg>";
-    return s + listHTML(st);
+    return split(s, sideList(st));
   };
 
   R.compare = function (d) {
@@ -736,29 +731,13 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   };
 
   R.radial = function (d, el, ctx) {
-    var it = d.items || [], n = it.length, p = ctx.pal, narrow = ctx.narrow;
-    if (narrow) {
-      var W = 420, H = 420, cx = 210, cy = 210, RR = 150, s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="' + esc(d.title) + '">' + BLUR;
-      s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + RR + '" fill="none" stroke="' + p.line + '" stroke-dasharray="3 6"/>';
-      it.forEach(function (x, i) { var a = -Math.PI / 2 + i * 2 * Math.PI / n; s += sphere("r" + i, cx + Math.cos(a) * RR, cy + Math.sin(a) * RR, 40, p.c[i % 6], [{ t: x.short || x.label, s: (x.short || x.label).length > 2 ? 15 : 19 }], 18); });
-      s += sphere("rc", cx, cy, 64, p.ink, [{ t: d.center || "", s: 21, w: 900 }], 21);
-      return s + "</svg>" + listHTML(it);
-    }
-    var W2 = 900, H2 = 600, cx2 = 450, cy2 = 300, R2 = 190, s2 = '<svg viewBox="0 0 ' + W2 + " " + H2 + '" role="img" aria-label="' + esc(d.title) + '">' + BLUR;
-    s2 += '<circle cx="' + cx2 + '" cy="' + cy2 + '" r="' + R2 + '" fill="none" stroke="' + p.line + '" stroke-dasharray="3 6"/>';
-    it.forEach(function (x, i) {
-      var a = -Math.PI / 2 + i * 2 * Math.PI / n, X = cx2 + Math.cos(a) * R2, Y = cy2 + Math.sin(a) * R2, c = Math.cos(a);
-      var lb = x.short || x.label;
-      s2 += sphere("r" + i, X, Y, 44, p.c[i % 6], [{ t: lb, s: lb.length > 3 ? 15 : lb.length > 2 ? 18 : 21 }], 20);
-      if (x.desc) {
-        var tx, ty, an;
-        if (Math.abs(c) < .3) { tx = X; ty = Math.sin(a) < 0 ? Y - 64 : Y + 76; an = "middle"; }
-        else { tx = X + (c > 0 ? 62 : -62); ty = Y + 7; an = c > 0 ? "start" : "end"; }
-        s2 += '<text x="' + tx + '" y="' + ty + '" text-anchor="' + an + '" font-family="Noto Sans SC,sans-serif" font-size="20" fill="' + p.muted + '">' + esc(x.desc) + "</text>";
-      }
-    });
-    s2 += sphere("rc", cx2, cy2, 72, p.ink, [{ t: d.center || "", s: 24, w: 900 }], 24);
-    return s2 + "</svg>";
+    var it = d.items || [], n = it.length, p = ctx.pal, W = 560, cx = 280, cy = 280, RR = 200;
+    var s = '<svg viewBox="0 0 ' + W + " " + W + '" role="img" aria-label="' + esc(d.title) + '">' + BLUR;
+    s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + RR + '" fill="none" stroke="' + p.line + '" stroke-width="1.5" stroke-dasharray="3 6"/>';
+    it.forEach(function (x, i) { var a = -Math.PI / 2 + i * 2 * Math.PI / n, lb = x.short || x.label; s += sphere("r" + i, cx + Math.cos(a) * RR, cy + Math.sin(a) * RR, 58, p.c[i % 6], [{ t: lb, s: lb.length > 3 ? 19 : lb.length > 2 ? 22 : 26 }], 22); });
+    s += sphere("rc", cx, cy, 82, p.ink, [{ t: d.center || "", s: (d.center || "").length > 3 ? 25 : 30, w: 900 }], 26);
+    s += "</svg>";
+    return split(s, sideList(it));
   };
 
   R.illus = function (d) {
