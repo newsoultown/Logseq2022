@@ -475,9 +475,10 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 .dk-shelfhead h2{font-family:var(--f-li);font-weight:400;font-size:30px;margin:0;color:var(--cream)}
 .dk-shelfhead span{color:rgba(239,232,216,.6)}
 .dk-shelfhead button{margin-left:auto;color:var(--cream);border:1px solid rgba(239,232,216,.3);border-radius:999px;padding:5px 14px;font-size:14px}
-.dshelf{--sk:.72;--row:calc(316px * var(--sk) + 10px);display:flex;flex-wrap:wrap;align-content:flex-start;padding:0 8px;background:repeating-linear-gradient(180deg,transparent 0,transparent calc(var(--row) - 16px),#5b4331 calc(var(--row) - 16px),#6a4f3a calc(var(--row) - 10px),#3d2c20 var(--row))}
+.dshelf{--sk:.72;--row:calc(316px * var(--skh,var(--sk)) + 10px);display:flex;flex-wrap:wrap;align-content:flex-start;padding:0 8px;background:repeating-linear-gradient(180deg,transparent 0,transparent calc(var(--row) - 16px),#5b4331 calc(var(--row) - 16px),#6a4f3a calc(var(--row) - 10px),#3d2c20 var(--row))}
 .dshelf .sl{height:var(--row);display:flex;align-items:flex-end;padding:0 3px 16px}
-.dshelf .spine{width:calc(var(--w) * var(--sk) * .85);height:calc(var(--h) * var(--sk))}
+.dshelf .spine{width:calc(var(--w) * var(--sk) * .85);height:calc(var(--h) * var(--skh,var(--sk)))}
+.dshelf .spine .tt{top:14%;bottom:13%}
 .dshelf .spine .tt{font-size:16px;letter-spacing:.04em;line-height:1.1;padding:0 3px}.dshelf .spine .tt.two{font-size:14px;letter-spacing:0;column-gap:2px}
 .dshelf .spine::before,.dshelf .spine::after{height:4px}
 .dshelf .spine:hover,.dshelf .spine:focus-visible{transform:translateY(-8px)}
@@ -518,7 +519,8 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   .dk-side h5{display:none}.dk-side button{width:auto;flex:none;padding:7px 10px;font-size:15px}.dk-side button .n{display:none}
   .dk-board{padding:16px;min-height:0}.pins{grid-template-columns:1fr 1fr;gap:20px 14px}.pin.now{grid-column:1/-1;grid-row:1;margin:0}.pin b{font-size:19px}.pin.now b{font-size:26px}
   .dk-board>svg.w{display:none}
-  .dshelf{--sk:.56;padding:0 2px}.dshelf .sl{padding:0 2px 16px}.dshelf .spine .tt{font-size:13px;letter-spacing:0}.dshelf .spine .tt.two{font-size:12px}
+  .dshelf{--sk:.56;--skh:.68;padding:0 2px}.dshelf .sl{padding:0 2px 16px}.dshelf .spine .tt{font-size:15px;letter-spacing:0;line-height:1.08;padding:0 2px;font-weight:600}.dshelf .spine .tt.two{font-size:13.5px;column-gap:1px}
+  .dshelf .spine.lea .tt{color:#f1dcaa;opacity:1;text-shadow:0 1px 2px rgba(0,0,0,.8)}.dshelf .spine.pap .tt{color:#1f1710;opacity:1}
   .dk-surface{grid-template-columns:1fr;padding:14px}.nbk{grid-template-columns:1fr}.nbk::after{display:none}.nbk .pg+.pg{padding-top:0}
 }
 
@@ -531,7 +533,7 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   box-shadow:0 6px 10px rgba(0,0,0,.5),inset 0 0 0 1px rgba(0,0,0,.35),inset 0 0 6px rgba(0,0,0,.45)}
 .dshelf .spine.lea::before,.dshelf .spine.lea::after{left:0;right:0;height:7px;border:0;opacity:1;
   background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(255,230,190,.14) 45%,rgba(0,0,0,.4));box-shadow:0 1px 0 rgba(0,0,0,.25)}
-.dshelf .spine.lea .tt{color:var(--gilt);opacity:.88;text-shadow:0 -1px 0 rgba(0,0,0,.55),0 1px 0 rgba(255,230,180,.08)}
+.dshelf .spine.lea .tt{color:#e6cf9c;opacity:.95;text-shadow:0 -1px 0 rgba(0,0,0,.55),0 1px 0 rgba(255,230,180,.08)}
 .dshelf .spine.pap{background:
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .28 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)'/%3E%3C/svg%3E"),
   linear-gradient(90deg,rgba(60,40,20,.28),rgba(60,40,20,0) 12%,rgba(60,40,20,0) 85%,rgba(60,40,20,.32)),
@@ -540,7 +542,7 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   var(--c);
   box-shadow:0 6px 10px rgba(0,0,0,.45),inset 0 0 0 1px rgba(70,50,30,.35)}
 .dshelf .spine.pap::before,.dshelf .spine.pap::after{left:4px;right:4px;height:0;border-top:1px solid rgba(58,46,36,.55);border-bottom:0;opacity:1}
-.dshelf .spine.pap .tt{color:var(--gilt);text-shadow:none;opacity:.85}
+.dshelf .spine.pap .tt{color:#2a2018;text-shadow:none;opacity:.95}
 .dshelf .spine:hover,.dshelf .spine:focus-visible{box-shadow:0 14px 18px rgba(0,0,0,.55)}
 </style>
 
