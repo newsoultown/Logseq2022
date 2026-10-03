@@ -1,0 +1,35 @@
+{
+ "type": "flow",
+ "palette": "mo",
+ "title": "情绪如何变成身体症状",
+ "subtitle": "第八章 · 核心因果链",
+ "steps": [
+  {
+   "label": "需求缺口",
+   "icon": "need",
+   "desc": "爱与安全感不足"
+  },
+  {
+   "label": "基础情绪",
+   "icon": "ice",
+   "desc": "表面没事心里堵"
+  },
+  {
+   "label": "神经内分泌",
+   "icon": "signal",
+   "desc": "身体拉响警报"
+  },
+  {
+   "label": "身体部位",
+   "icon": "body",
+   "desc": "胃、肩颈先痛"
+  },
+  {
+   "label": "慢性症状",
+   "icon": "doc",
+   "desc": "检查却都正常"
+  }
+ ],
+ "takeaway": "真正致病的，是长年累积的基础情绪",
+ "source": "《破解情绪密码》第八章"
+}

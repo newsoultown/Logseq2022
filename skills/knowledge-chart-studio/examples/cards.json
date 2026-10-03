@@ -1,0 +1,23 @@
+{
+ "type": "cards",
+ "palette": "mo",
+ "title": "三个松开的地方",
+ "items": [
+  {
+   "label": "补上需求",
+   "icon": "heart",
+   "desc": "儿子平安归来，绞痛就好了"
+  },
+  {
+   "label": "固定喘息",
+   "icon": "tea",
+   "desc": "每天休息两小时，羊不再生病"
+  },
+  {
+   "label": "培养好情绪",
+   "icon": "sun",
+   "desc": "求生意志撑过八年"
+  }
+ ],
+ "source": "《破解情绪密码》"
+}
