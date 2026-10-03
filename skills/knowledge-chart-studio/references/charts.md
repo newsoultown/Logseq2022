@@ -11,6 +11,8 @@
 | `takeaway` | | 一句结论，24 字内，显示在图下方的色条 |
 | `source` | | 来源，例如「《破解情绪密码》第四章」 |
 
+版面一律固定 16:9（`aspect` 不填即是）；只有特殊情况才写 `"aspect":"fluid"` 改用自适应版面。内容放不下时引擎会自动缩小，但请先精简文字，而不是靠缩小。
+
 字数上限是硬规则（`scripts/check.py` 会检查），因为使用者明确要求字大、字少。超过时改写得更精炼，或拆成两张图。
 
 可用图示（`icon`）：need（裂开的心）、heart、ice（冰山）、signal（讯号）、body（人形）、doc（病历）、tea、sun、brain、people、book、leaf、key、eye、star、lotus。

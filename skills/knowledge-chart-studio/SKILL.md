@@ -16,6 +16,7 @@ description: 知识图表工坊——把书摘、读书笔记、身心灵与心�
 5. **默认简体中文**。书名或原文引用可保留原字。
 6. **中文字百分之百正确**：AI 画的图不带字，所有文字都由程序排上去。
 7. **只用两套自有配色**：莫兰迪知性（`mo`，预设）、灵境晶光（`ling`）。不沿用参考图的配色。
+8. **所有图表固定 16:9**：引擎在 1280×720 的舞台上排版、整张等比缩放，空间要用满；手机上靠「⤢ 放大」全屏检视。不要为了手机改成直式。
 
 ## 作业流程
 
@@ -48,7 +49,7 @@ description: 知识图表工坊——把书摘、读书笔记、身心灵与心�
 ### 4. 写 JSON、自检、出图
 1. 照 `references/charts.md` 写 spec JSON（`examples/` 有每种类型的范例，可直接复制改写）。
 2. 执行 `python3 scripts/check.py spec.json`，有「错误」就改到通过；「提醒」斟酌处理。
-3. 出图：`python3 scripts/render.py spec.json -o out.html --png out.png`（手机直式加 `--mobile`）。
+3. 出图：`python3 scripts/render.py spec.json -o out.html --png out.png`（固定 16:9，PNG 为 2560×1440）。
    - 没有 Python 或浏览器的环境（例如 claude.ai 一般对话）：把 `assets/template.html` 的 `__ENGINE__` 换成 `assets/engine.js` 全文、`__SPEC__` 换成 JSON，直接当 Artifact 发布。
 4. 能截图就看一眼成品：文字有没有重叠、出界、太小。有问题修一次再交付。
 

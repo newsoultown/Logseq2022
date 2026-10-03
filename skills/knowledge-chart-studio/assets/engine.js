@@ -36,6 +36,19 @@
   };
 
   var CSS = '' +
+  '.kcs-frame{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:14px;background:var(--bg)}' +
+  '.kcs-stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0}' +
+  '.kcs.kcs-169{width:1280px;height:720px;border-radius:0;padding:40px 56px 30px;font-size:21px;display:flex;flex-direction:column}' +
+  '.kcs-169 .kcs-h{margin-bottom:12px;flex:none}.kcs-169 .kcs-t{font-size:1.75em}.kcs-169 .kcs-s{font-size:.95em}' +
+  '.kcs-169 .kcs-body{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden}.kcs-169 .kcs-bi{flex:none;transform-origin:center center}' +
+  '.kcs-169 .kcs-take{margin-top:12px;flex:none;font-size:1.05em;padding:10px 16px}.kcs-169 .kcs-src{margin-top:6px;flex:none;font-size:.75em}' +
+  '.kcs-169 .kcs-fig svg{max-height:470px}.kcs-169 .kcs-split{gap:40px}' +
+  '.kcs-169 .kcs-side{gap:12px}.kcs-169 .kcs-kids{gap:5px}.kcs-169 .kcs-kid{padding:2px 12px}.kcs-169 .kcs-bn{padding:6px 14px}.kcs-169 .kcs-br{gap:22px}' +
+  '.kcs-169 .kcs-ol.v{gap:12px}.kcs-169 .kcs-ol.v li{align-items:center}.kcs-169 .kcs-ol.v b{display:inline;margin-right:.6em}.kcs-169 .kcs-ol.v div span{display:inline}' +
+  '.kcs-169 .kcs-tl{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:20px;border-left:none;border-top:3px solid var(--line);padding:30px 0 0;margin-top:14px}' +
+  '.kcs-169 .kcs-tl li::before{left:0;top:-41px}' +
+  '.kcs-zoom{position:absolute;right:10px;bottom:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:4px 12px;font:600 13px/1.4 "Noto Sans SC",sans-serif;cursor:pointer;opacity:.85}.kcs-zoom:hover,.kcs-zoom:focus-visible{opacity:1}' +
+  '.kcs-ov{position:fixed;inset:0;z-index:9999;background:rgba(20,18,24,.86);display:grid;place-items:center;align-content:center;gap:10px;padding:12px}.kcs-ovbox{max-width:100%}.kcs-ovtip{color:#ddd;font:14px "Noto Sans SC",sans-serif;margin:0}' +
   '.kcs{--bg:#f2efe9;background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.7;padding:clamp(18px,3.5vw,40px);border-radius:16px;box-sizing:border-box}' +
   '.kcs *{box-sizing:border-box}' +
   '.kcs-h{margin-bottom:22px}' +
@@ -140,15 +153,17 @@
     return html;
   };
   function curve(x1, y1, x2, y2, c, w) { var mx = (x1 + x2) / 2; return '<path d="M' + x1 + " " + y1 + " C" + mx + " " + y1 + " " + mx + " " + y2 + " " + x2 + " " + y2 + '" fill="none" stroke="' + c + '" stroke-width="' + w + '" stroke-linecap="round"/>'; }
+  /* 用版面座标（offset）算连线，图在 16:9 舞台里被缩放时也不会歪 */
+  function relPos(e, anc) { var x = 0, y = 0; while (e && e !== anc) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; } return { x: x, y: y }; }
+  function box(e, anc) { var p = relPos(e, anc); return { l: p.x, t: p.y, r: p.x + e.offsetWidth, b: p.y + e.offsetHeight, cy: p.y + e.offsetHeight / 2 }; }
   function mmWires(el, half) {
     var mm = el.querySelector(".kcs-mm"); if (!mm) return; var sv = mm.querySelector("svg.w"); if (getComputedStyle(sv).display === "none") return;
-    var B = mm.getBoundingClientRect(), hub = mm.querySelector(".kcs-hub").getBoundingClientRect(), h = "", cs = getComputedStyle(el);
-    sv.setAttribute("viewBox", "0 0 " + B.width + " " + B.height);
+    var hub = box(mm.querySelector(".kcs-hub"), mm), h = "", cs = getComputedStyle(el);
+    sv.setAttribute("viewBox", "0 0 " + mm.offsetWidth + " " + mm.offsetHeight);
     mm.querySelectorAll(".kcs-br").forEach(function (b, i) {
-      var left = i < half, c = cs.getPropertyValue("--c" + ((i % 6) + 1)).trim(), bn = b.querySelector(".kcs-bn").getBoundingClientRect();
-      var hx = left ? hub.left - B.left : hub.right - B.left, hy = hub.top + hub.height / 2 - B.top, bx = left ? bn.right - B.left : bn.left - B.left, by = bn.top + bn.height / 2 - B.top;
-      h += curve(hx, hy, bx, by, c, 2.6);
-      b.querySelectorAll(".kcs-kid").forEach(function (k) { var r = k.getBoundingClientRect(), sx = left ? bn.left - B.left : bn.right - B.left, kx = left ? r.right - B.left : r.left - B.left, ky = r.top + r.height / 2 - B.top; h += curve(sx, by, kx, ky, c, 1.6); });
+      var left = i < half, c = cs.getPropertyValue("--c" + ((i % 6) + 1)).trim(), bn = box(b.querySelector(".kcs-bn"), mm);
+      h += curve(left ? hub.l : hub.r, hub.cy, left ? bn.r : bn.l, bn.cy, c, 2.6);
+      b.querySelectorAll(".kcs-kid").forEach(function (k) { var r = box(k, mm); h += curve(left ? bn.l : bn.r, bn.cy, left ? r.r : r.l, r.cy, c, 1.6); });
     });
     sv.innerHTML = h;
   }
@@ -248,25 +263,63 @@
     return h;
   };
 
-  /* ---------- 主入口 ---------- */
-  function render(el, spec) {
-    injectCSS();
-    el.classList.add("kcs");
-    var pal = applyPalette(el, spec.palette);
-    function draw() {
-      var narrow = el.clientWidth < 700;
-      el.classList.toggle("narrow", narrow);
-      var ctx = { pal: pal, narrow: narrow, after: [] }, fn = R[spec.type];
-      if (!fn) { el.innerHTML = '<p class="kcs-s">不支持的图表类型：' + esc(spec.type) + "</p>"; return; }
-      var head = (spec.title || spec.subtitle) ? '<div class="kcs-h">' + (spec.title ? '<p class="kcs-t">' + esc(spec.title) + "</p>" : "") + (spec.subtitle ? '<p class="kcs-s">' + esc(spec.subtitle) + "</p>" : "") + "</div>" : "";
-      el.innerHTML = head + fn(spec, el, ctx) + (spec.takeaway ? '<p class="kcs-take">' + esc(spec.takeaway) + "</p>" : "") + (spec.source ? '<p class="kcs-src">来源：' + esc(spec.source) + "</p>" : "");
-      el.dataset.narrow = narrow ? "1" : "0";
+  /* ---------- 主入口 ----------
+   * 预设固定 16:9：在 1280×720 的舞台上排版，再整张等比缩放到容器宽度；内容超出舞台时自动缩小塞进去。
+   * spec.aspect = "fluid" 时改用旧的自适应版面（宽横排、窄直排）。
+   * 点图表可放大成全屏检视。
+   */
+  var SW = 1280, SH = 720;
+  function inner(spec, el, ctx) {
+    var fn = R[spec.type];
+    if (!fn) return '<p class="kcs-s">不支持的图表类型：' + esc(spec.type) + "</p>";
+    var head = (spec.title || spec.subtitle) ? '<div class="kcs-h">' + (spec.title ? '<p class="kcs-t">' + esc(spec.title) + "</p>" : "") + (spec.subtitle ? '<p class="kcs-s">' + esc(spec.subtitle) + "</p>" : "") + "</div>" : "";
+    var body = fn(spec, el, ctx), foot = (spec.takeaway ? '<p class="kcs-take">' + esc(spec.takeaway) + "</p>" : "") + (spec.source ? '<p class="kcs-src">来源：' + esc(spec.source) + "</p>" : "");
+    return { head: head, body: body, foot: foot };
+  }
+  function render(el, spec, opt) {
+    injectCSS(); opt = opt || {};
+    var pal = applyPalette(el, spec.palette), half = Math.ceil((spec.branches || []).length / 2);
+    if (spec.aspect === "fluid") {
+      el.classList.add("kcs");
+      var draw = function () {
+        var narrow = el.clientWidth < 700; el.classList.toggle("narrow", narrow);
+        var ctx = { pal: pal, narrow: narrow, after: [] }, x = inner(spec, el, ctx);
+        el.innerHTML = typeof x === "string" ? x : x.head + x.body + x.foot;
+        ctx.after.forEach(function (f) { f(); });
+      };
+      draw();
+      var last = el.clientWidth < 700, t;
+      if (root.ResizeObserver) new ResizeObserver(function () { clearTimeout(t); t = setTimeout(function () { var nw = el.clientWidth < 700; if (nw !== last) { last = nw; draw(); } else if (spec.type === "mindmap") mmWires(el, half); }, 100); }).observe(el);
+      return;
+    }
+    el.classList.add("kcs-frame");
+    var ctx = { pal: pal, narrow: false, after: [] }, x = inner(spec, el, ctx);
+    el.innerHTML = '<div class="kcs-stage"><div class="kcs kcs-169">' + (typeof x === "string" ? x : x.head + '<div class="kcs-body"><div class="kcs-bi">' + x.body + "</div></div>" + x.foot) + "</div></div>" +
+      (opt.noZoom ? "" : '<button class="kcs-zoom" aria-label="放大检视">⤢ 放大</button>');
+    var stage = el.querySelector(".kcs-stage"), card = stage.firstChild;
+    function fitInner() {
+      var bd = card.querySelector(".kcs-body"), bi = card.querySelector(".kcs-bi"); if (!bd || !bi) return;
+      var bw = bd.clientWidth, bh = bd.clientHeight, k = 1;
+      bi.style.transform = "";
+      for (var it = 0; it < 4; it++) { bi.style.width = (bw / k) + "px"; k = Math.max(.45, Math.min(1.3, bh / bi.offsetHeight)); }
+      bi.style.width = (bw / k) + "px";
+      if (Math.abs(k - 1) > .02) bi.style.transform = "scale(" + k.toFixed(3) + ")";
       ctx.after.forEach(function (f) { f(); });
     }
-    draw();
-    var last = el.clientWidth < 700, t;
-    if (root.ResizeObserver) new ResizeObserver(function () { clearTimeout(t); t = setTimeout(function () { var nw = el.clientWidth < 700; if (nw !== last) { last = nw; draw(); } else if (spec.type === "mindmap") mmWires(el, Math.ceil((spec.branches || []).length / 2)); }, 100); }).observe(el);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (spec.type === "mindmap") mmWires(el, Math.ceil((spec.branches || []).length / 2)); });
+    function fit() { var k = el.clientWidth / SW; stage.style.transform = "scale(" + k + ")"; }
+    ctx.after.forEach(function (f) { f(); });
+    fitInner(); fit();
+    if (root.ResizeObserver) new ResizeObserver(fit).observe(el);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitInner(); });
+    var zb = el.querySelector(".kcs-zoom");
+    if (zb) zb.onclick = function (e) { e.stopPropagation(); zoom(spec); };
+  }
+  function zoom(spec) {
+    var ov = document.createElement("div"); ov.className = "kcs-ov";
+    var vw = innerWidth, vh = innerHeight, w = Math.min(vw - 24, (vh - 70) * 16 / 9);
+    ov.innerHTML = '<div class="kcs-ovbox" style="width:' + w + 'px"></div><p class="kcs-ovtip">' + (vw < vh ? "把手机横过来看会更大　·　" : "") + "点任何地方关闭</p>";
+    document.body.appendChild(ov); render(ov.firstChild, spec, { noZoom: true });
+    ov.onclick = function () { ov.remove(); };
   }
 
   root.KCS = { render: render, palettes: PAL, icons: Object.keys(ICON) };

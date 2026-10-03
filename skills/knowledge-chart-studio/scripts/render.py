@@ -36,6 +36,7 @@ def png_python(html_path, png_path, width):
         pg = b.new_page(viewport={"width": width, "height": 900}, device_scale_factor=2)
         pg.goto("file://" + os.path.abspath(html_path))
         pg.wait_for_timeout(1500)
+        pg.add_style_tag(content=".kcs-zoom{display:none}")
         pg.locator("#chart").screenshot(path=png_path)
         b.close()
 
@@ -47,7 +48,7 @@ if(!pw){try{pw=require(require('child_process').execSync('npm root -g').toString
 if(!pw){console.error('NO_PLAYWRIGHT');process.exit(3)}
 (async()=>{const fs=require('fs');const opt=fs.existsSync('/opt/pw-browsers/chromium')?{executablePath:'/opt/pw-browsers/chromium'}:{};
 const b=await pw.chromium.launch(opt);const pg=await b.newPage({viewport:{width:+process.argv[4],height:900},deviceScaleFactor:2});
-await pg.goto('file://'+path.resolve(process.argv[2]));await pg.waitForTimeout(1500);
+await pg.goto('file://'+path.resolve(process.argv[2]));await pg.waitForTimeout(1500);await pg.addStyleTag({content:'.kcs-zoom{display:none}'});
 await (await pg.$('#chart')).screenshot({path:process.argv[3]});await b.close();})();
 """
 
@@ -69,8 +70,8 @@ def main():
     ap.add_argument("spec")
     ap.add_argument("-o", "--out", default="chart.html")
     ap.add_argument("--png")
-    ap.add_argument("--mobile", action="store_true", help="以 430px 宽截直式图")
-    ap.add_argument("--width", type=int, default=1200)
+    ap.add_argument("--mobile", action="store_true", help="以手机宽度（430px）截图；图表固定 16:9，只是整张缩小")
+    ap.add_argument("--width", type=int, default=1280)
     a = ap.parse_args()
 
     spec = json.load(open(a.spec, encoding="utf-8"))
@@ -78,7 +79,7 @@ def main():
     print("HTML：" + a.out)
     if not a.png:
         return
-    width = 430 if a.mobile else a.width
+    width = (430 if a.mobile else a.width) + 32  # 页面左右各 16px 边距
     errs = []
     for fn in (png_python, png_node):
         try:

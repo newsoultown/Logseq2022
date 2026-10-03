@@ -4,12 +4,12 @@
 最通用的交付方式，任何平台都能用。
 - 有 Python：`python3 scripts/render.py spec.json -o chart.html`，把 chart.html 发布成 Artifact。
 - 没有 Python：读 `assets/template.html`，把 `__ENGINE__` 换成 `assets/engine.js` 全文、`__SPEC__` 换成 JSON、`__TITLE__` 换成标题、`__BG__` 换成配色底色（mo #f2efe9／ling #f4f2fa），整份当 Artifact 发布。
-- 页面会依宽度自动切换横式／直式，手机上不用另外处理。
+- 图表固定 16:9，依容器宽度整张缩放；右下角有「⤢ 放大」可全屏检视（手机横放更大）。
 - 字型来自 Google Fonts（思源宋体、思源黑体），载入失败时自动用系统字型。
 
 ## 高清 PNG（讲义、简报、Notion）
 `python3 scripts/render.py spec.json -o chart.html --png chart.png`
-- 横式宽 1200px、2 倍解析度；手机直式加 `--mobile`（430px 宽）。
+- 固定 16:9，输出 2560×1440（1280×720 的 2 倍解析度）。
 - 需要浏览器（Python 或 Node 的 playwright）。没有就只产生 HTML，并告诉使用者 PNG 没产生、原因是什么。
 
 ## Notion
