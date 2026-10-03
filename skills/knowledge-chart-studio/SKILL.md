@@ -55,7 +55,7 @@ description: 知识图表工坊——把书摘、读书笔记、身心灵与心�
 
 ### 5. 交付
 依使用者要放的地方处理，详见 `references/delivery.md`：
-- 网页／App 里看 → Artifact（会自动在手机改成直式）
+- 网页／App 里看 → Artifact（16:9 整张缩放，手机用「⤢ 放大」看）
 - Notion → 高清 PNG＋文字版（图无法上传时，至少放文字版与 mermaid 心智图）
 - 讲义、简报 → 横式 PNG
 - 「我的书房」App → spec JSON 存进研读心得的「图表数据」栏位

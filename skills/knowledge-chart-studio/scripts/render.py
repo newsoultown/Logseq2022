@@ -4,7 +4,7 @@
 用法：
   python3 scripts/render.py spec.json -o out.html
   python3 scripts/render.py spec.json -o out.html --png out.png            # 横式（讲义、Notion）
-  python3 scripts/render.py spec.json -o out.html --png out.png --mobile   # 直式（手机）
+  python3 scripts/render.py spec.json -o out.html --png out.png --mobile   # 以手机宽度截图（仍是 16:9）
 
 HTML 内含整份引擎，单档即可打开或当 Artifact 发布。
 PNG 需要浏览器：依序尝试 Python playwright、Node playwright；都没有就只出 HTML 并说明原因。

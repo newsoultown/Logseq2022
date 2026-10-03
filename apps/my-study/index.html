@@ -5,16 +5,16 @@
 <style>
 /* 布局：夜色沉浸。全屏场景 + 光线与景深，界面以暗玻璃浮在场景之上；阅读时只有一页被灯照亮的纸。 */
 :root{
-  --abyss:#07080f;              /* 最深的夜 */
-  --night:#0f1226;              /* 夜空 */
-  --moon:#f1dfae;               /* 月光金，唯一主强调 */
+  --abyss:#151d1a;              /* 最深的夜 */
+  --night:#1f2b26;              /* 夜空 */
+  --moon:#e3c88f;               /* 月光金，唯一主强调 */
   --ember:#e8a85a;              /* 烛光（古堡） */
   --violet:#ad92ff;             /* 灵光（水晶洞窟） */
   --seal:#b8382c;               /* 朱印：研读本反向链接 */
   --text:#ebe5d5;
   --mist:rgba(235,229,213,.6);
   --line:rgba(235,229,213,.12);
-  --glass:rgba(14,16,32,.66);
+  --glass:rgba(24,34,30,.78);
   --paper:#ece2cc;--ink:#2a2118;--ink-2:#7a6a55;
   --f-display:"Ma Shan Zheng","Noto Serif SC",serif;
   --f-body:"Noto Serif SC","Songti SC","STSong",serif;
@@ -441,6 +441,81 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 .ig-mx .ay{writing-mode:vertical-rl;grid-row:1/3}
 .ig-mx .axx{grid-column:2/4}
 @media (max-width:560px){.ig-cmp{grid-template-columns:1fr}.ig-vs{text-align:center}}
+
+/* ================= 书桌 ================= */
+.desk-s{--wall:#1c2622;--panel:#2b3d35;--panel2:#344a40;--board:#33433c;--wood:#3b2d23;--wood2:#4a3829;--cream:#efe8d8;--sage:#c8d5c2;--mistb:#bfd0d4;--ochre:#d5a659;--mint:#d2ddcd;--brass:#c9a35c;--dk-ink:#2a2620;
+  min-height:100vh;background:radial-gradient(120% 80% at 50% 0%,#26332e 0%,var(--wall) 60%,#141b18 100%);padding:18px 20px calc(110px + env(safe-area-inset-bottom,0px));color:var(--text)}
+.dk-top{display:flex;align-items:center;gap:12px;max-width:1380px;margin:0 auto 14px}
+.dk-top .wordmark{font-family:var(--f-li);font-size:26px;letter-spacing:.12em;color:var(--cream)}
+.dk-top .sp{flex:1}
+.dk-grid{max-width:1380px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr) 250px;gap:18px;align-items:start}
+.dk-side{background:linear-gradient(180deg,var(--panel2),var(--panel));border-radius:14px;padding:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 18px 40px -20px rgba(0,0,0,.6);position:sticky;top:12px;max-height:calc(100vh - 40px);overflow:auto}
+.dk-side h5{margin:12px 10px 6px;font-size:12px;letter-spacing:.24em;color:rgba(239,232,216,.5);font-weight:400}
+.dk-side button{display:flex;align-items:center;gap:12px;width:100%;padding:9px 10px;border-radius:9px;color:var(--cream);font-size:16px;text-align:left}
+.dk-side button .g{flex:none;width:30px;height:30px;border-radius:8px;border:1.5px solid rgba(239,232,216,.55);display:grid;place-items:center;font-size:15px;font-family:var(--f-li)}
+.dk-side button .n{margin-left:auto;font-size:12px;color:rgba(239,232,216,.5)}
+.dk-side button:hover{background:rgba(255,255,255,.06)}
+.dk-side button[aria-current="true"]{background:#3f5a4e;box-shadow:inset 3px 0 0 var(--ochre)}
+.dk-board{position:relative;background:var(--board);border-radius:16px;min-height:440px;padding:26px;box-shadow:inset 0 2px 18px rgba(0,0,0,.35),0 24px 50px -24px rgba(0,0,0,.7);background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px);background-size:5px 5px}
+.dk-board>svg.w{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.pins{position:relative;min-height:388px;align-content:center;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 30px;align-items:center}
+.pin{position:relative;background:var(--pc,var(--cream));color:var(--dk-ink);border-radius:10px;padding:18px 18px 16px;box-shadow:0 10px 22px -10px rgba(0,0,0,.6);text-align:left;min-width:0;transition:transform .2s}
+.pin::before{content:"";position:absolute;top:-7px;left:50%;width:13px;height:13px;margin-left:-6px;border-radius:50%;background:#2c3a33;box-shadow:0 2px 3px rgba(0,0,0,.4),inset 0 -2px 2px rgba(255,255,255,.15)}
+.pin:hover,.pin:focus-visible{transform:translateY(-3px) rotate(-.4deg)}
+.pin .strip{position:absolute;left:0;top:0;bottom:0;width:7px;border-radius:10px 0 0 10px;background:var(--bc)}
+.pin .k{font-size:12px;letter-spacing:.2em;color:rgba(42,38,32,.55)}
+.pin b{display:block;font-family:var(--f-li);font-weight:400;font-size:22px;line-height:1.3;margin:4px 0 4px}
+.pin small{display:block;font-size:13px;color:rgba(42,38,32,.65)}
+.pin.now{grid-column:2;grid-row:2;margin:0 -22px;padding:24px 24px 20px;transform:none}
+.pin.now b{font-size:28px}
+.pin.now .bar{height:6px;border-radius:3px;background:rgba(42,38,32,.12);margin:12px 0 14px;overflow:hidden}.pin.now .bar i{display:block;height:100%;background:var(--ochre)}
+.pin.now .go{display:inline-block;background:#2f4a40;color:var(--cream);border-radius:999px;padding:8px 18px;font-size:15px}
+.board-empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:rgba(239,232,216,.75);font-size:17px;line-height:1.9}
+.dk-shelfhead{display:flex;align-items:baseline;gap:14px;margin:0 0 18px;flex-wrap:wrap}
+.dk-shelfhead h2{font-family:var(--f-li);font-weight:400;font-size:30px;margin:0;color:var(--cream)}
+.dk-shelfhead span{color:rgba(239,232,216,.6)}
+.dk-shelfhead button{margin-left:auto;color:var(--cream);border:1px solid rgba(239,232,216,.3);border-radius:999px;padding:5px 14px;font-size:14px}
+.dshelf{display:flex;flex-wrap:wrap;align-content:flex-start;padding:0 8px;background:repeating-linear-gradient(180deg,transparent 0,transparent 300px,#5b4331 300px,#6a4f3a 306px,#3d2c20 316px)}
+.dshelf .sl{height:316px;display:flex;align-items:flex-end;padding:0 4px 16px}
+.dshelf .shelf-msg{width:100%;padding:60px 0;text-align:center;color:rgba(239,232,216,.75)}
+.dk-cab{display:grid;gap:10px}
+.dk-grid{grid-template-rows:auto auto 1fr}.dk-side{grid-column:1;grid-row:1/span 3}.dk-board{grid-column:2;grid-row:1}.dk-cab{grid-column:3;grid-row:1/span 3}.dk-surface{grid-column:2;grid-row:2}
+.cab{background:linear-gradient(180deg,#2e4239,#24352e);border-radius:14px;padding:12px 12px 14px;box-shadow:0 24px 50px -24px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)}
+.cab-folders{display:flex;gap:4px;padding:0 6px;height:34px;align-items:flex-end}
+.cab-folders i{flex:1;height:100%;border-radius:6px 6px 0 0;background:var(--fc)}
+.cab h4{margin:10px 6px 8px;font-size:13px;letter-spacing:.22em;color:rgba(239,232,216,.6);font-weight:400}
+.drawer{display:flex;align-items:center;gap:10px;width:100%;background:linear-gradient(180deg,#355046,#2b4239);border-radius:9px;padding:12px 12px;margin-top:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 3px 0 #1b2823;color:var(--cream);text-align:left}
+.drawer .plate{flex:1;min-width:0;background:linear-gradient(180deg,#d9bf86,#b8954f);color:#2a2214;border-radius:4px;padding:5px 10px;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.drawer .h{flex:none;width:34px;height:12px;border-radius:6px;background:linear-gradient(180deg,#d8bd82,#9e7d3f);box-shadow:0 2px 2px rgba(0,0,0,.4)}
+.drawer small{flex:none;font-size:12px;color:rgba(239,232,216,.6)}
+.drawer:hover{filter:brightness(1.08)}
+.dk-surface{margin:0;background:linear-gradient(180deg,var(--wood2),var(--wood));border-radius:14px;padding:22px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:22px;box-shadow:inset 0 2px 0 rgba(255,255,255,.06)}
+.nbk{display:grid;grid-template-columns:1fr 1fr;background:#f3eee2;color:var(--dk-ink);border-radius:8px;box-shadow:0 14px 26px -12px rgba(0,0,0,.7);position:relative;text-align:left;min-height:220px;background-image:repeating-linear-gradient(180deg,transparent 0,transparent 27px,rgba(80,110,130,.16) 27px,rgba(80,110,130,.16) 28px)}
+.nbk::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:rgba(0,0,0,.12)}
+.nbk .pg{padding:18px 20px;min-width:0}
+.nbk h3{margin:0 0 6px;font-family:var(--f-li);font-weight:400;font-size:24px}
+.nbk .pg small{color:rgba(42,38,32,.6);font-size:13px}
+.nbk .ln{font-family:"Ma Shan Zheng",var(--f-body);font-size:17px;line-height:28px;margin:0 0 4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nbk .ln em{font-style:normal;color:rgba(42,38,32,.5);font-family:var(--f-body);font-size:12px;margin-left:6px}
+.cbox{display:flex;flex-direction:column;justify-content:flex-end;gap:10px;background:linear-gradient(180deg,#2c3f37,#22332c);border-radius:10px;padding:16px;text-align:left;color:var(--cream);box-shadow:0 14px 26px -12px rgba(0,0,0,.7);position:relative;overflow:hidden;min-height:220px}
+.cbox .cards{position:absolute;left:16px;right:16px;top:14px;display:flex;gap:6px}
+.cbox .cards i{flex:1;height:70px;border-radius:6px;background:var(--cc);transform:rotate(var(--r))}
+.cbox b{font-family:var(--f-li);font-weight:400;font-size:22px}
+.cbox .q{font-size:15px;line-height:1.7;color:rgba(239,232,216,.85);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.notes-list{display:grid;gap:10px;max-height:60vh;overflow:auto;margin:10px 0}
+.notes-list .it{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.05)}
+.notes-list .it p{margin:0;line-height:1.6}.notes-list .it small{color:var(--mist)}
+@media (max-width:1100px){.dk-grid{grid-template-columns:200px minmax(0,1fr)}.dk-cab{grid-column:1/-1;grid-row:4}.cab{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0 10px}.cab-folders,.cab h4{grid-column:1/-1}}
+@media (max-width:760px){
+  .desk-s{padding:12px 12px calc(100px + env(safe-area-inset-bottom,0px))}
+  .dk-grid{grid-template-columns:1fr;gap:12px}
+  .dk-side,.dk-board,.dk-cab,.dk-surface{grid-column:1;grid-row:auto}.pins{min-height:0}
+  .dk-side{position:static;max-height:none;display:flex;gap:6px;overflow-x:auto;padding:8px;-webkit-overflow-scrolling:touch}
+  .dk-side h5{display:none}.dk-side button{width:auto;flex:none;padding:7px 10px;font-size:15px}.dk-side button .n{display:none}
+  .dk-board{padding:16px;min-height:0}.pins{grid-template-columns:1fr 1fr;gap:20px 14px}.pin.now{grid-column:1/-1;grid-row:1;margin:0}.pin b{font-size:19px}.pin.now b{font-size:26px}
+  .dk-board>svg.w{display:none}
+  .dk-surface{grid-template-columns:1fr;padding:14px}.nbk{grid-template-columns:1fr}.nbk::after{display:none}.nbk .pg+.pg{padding-top:0}
+}
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -468,6 +543,7 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
   <div class="desk" id="desk"></div>
 </section>
 
+<section class="screen desk-s" id="s-desk" hidden></section>
 <section class="screen room" id="s-room" hidden></section>
 <section class="screen reader" id="s-reader" hidden></section>
 <section class="screen" id="s-nb" hidden></section>
@@ -475,7 +551,7 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 <section class="screen" id="s-set" hidden></section>
 
 <nav class="nav glass" aria-label="主导航">
-  <button data-nav="court">中庭</button>
+  <button data-nav="desk">书桌</button>
   <button data-nav="nb">研读本</button>
   <button data-nav="card">金句卡</button>
   <button data-nav="set">设定</button>
@@ -1069,21 +1145,23 @@ function gotoExcerpt(nbKey,id){curNb=nbKey;renderNB();show("nb");closeAside();
 /* ---------- 导航 ---------- */
 var current="court";
 function show(name){
-  current=name;["court","room","reader","nb","card","set"].forEach(function(n){$("#s-"+n).hidden=(n!==name);});
-  var key=(name==="room"||name==="reader")?"court":name;
+  if(name==="court"||name==="room"){name="desk";renderDesk();}
+  current=name;["desk","court","room","reader","nb","card","set"].forEach(function(n){$("#s-"+n).hidden=(n!==name);});
+  var key=name==="reader"?"desk":name;
   $$(".nav button").forEach(function(b){if(b.dataset.nav===key)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});
   hideSel();$("#tip").hidden=true;window.scrollTo(0,0);
   document.body.classList.toggle("nav-off",name==="reader"&&S.navHide!==false);
   Court.active(name==="court");Fx.active(name==="room");
 }
 function refreshView(){
-  if(current==="court")renderCourt();
+  if(current==="desk")renderDesk();
+  else if(current==="court")renderCourt();
   else if(current==="room")renderRoom(curRoom,true);
   else if(current==="reader"&&R.book&&book(R.book)&&book(R.book).p)rerender();
   else if(current==="nb")renderNB();
 }
 $$(".nav button").forEach(function(b){b.onclick=function(){var n=b.dataset.nav;
-  if(n==="court")renderCourt();if(n==="nb")renderNB();if(n==="card")renderCard();if(n==="set")renderSet();show(n);};});
+  if(n==="desk"){D.cat=null;renderDesk();}if(n==="nb")renderNB();if(n==="card")renderCard();if(n==="set")renderSet();show(n);};});
 /* ---------- 中庭夜景（canvas） ---------- */
 var Court=(function(){
   var cv=$("#courtCv"),ctx=cv.getContext("2d"),W=0,H=0,dpr=1,on=false,raf=0,t0=performance.now();
@@ -1331,7 +1409,7 @@ var R={book:null,active:-1};
 function openReader(bid,p){
   var bk=book(bid);if(!bk){toast("找不到这本书");return;}
   if(!bk.p&&!bk.notion){toast("这本书在原型中还没有内文");return;}
-  R.book=bid;R.active=-1;S.last={book:bid,p:p||0};save();
+  R.book=bid;R.active=-1;S.last={book:bid,p:p||0};pushRecent(bid,p||0);save();
   if(bk.notion&&!bk.p){
     if(!NX.on){toast("请先连接 Notion");return;}
     var el=$("#s-reader");el.className="screen reader";el.innerHTML='<div class="r-bar glass"><button class="btn" id="rBack0">‹ 书架</button><div class="t">《'+esc(bk.t)+'》<small>从 Notion 取书中…</small></div><span style="width:40px"></span></div><div class="r-layout"><article class="sheet-paper"><div class="loadpaper">正在从 Notion 打开这本书…</div></article></div>';
@@ -1432,7 +1510,7 @@ function onTermHover(e){
 }
 function asideEmpty(){return '<h4>Marginalia<span>旁注</span></h4><div class="empty">点任何一段，这里会出现这段的注释、你写过的心得，以及它被收进了哪些研读本。<br><br>'+(isN(R.book)?"你在这里写的心得和划线，会同步到 Notion「我的书房 · 研读心得」。":"选取文字可以划线、剪入研读本或做成金句卡。")+'</div>';}
 function activate(i,termIdx,focus){
-  var bk=book(R.book),para=bk.p[i];R.active=i;S.last={book:R.book,p:i};save();
+  var bk=book(R.book),para=bk.p[i];R.active=i;S.last={book:R.book,p:i};pushRecent(R.book,i);save();
   $$(".para.active").forEach(function(x){x.classList.remove("active");});var pe=$('.para[data-p="'+i+'"]');if(pe)pe.classList.add("active");
   var bl=backlinks(R.book,i),pn=paraNotes(R.book,i);
   var h='<h4>Passage<span>第 '+(i+1)+' 段</span></h4><div class="quote">'+esc(para.t.length>220?para.t.slice(0,220)+"…":para.t)+'</div>';
@@ -1904,7 +1982,79 @@ function renderSet(){
 }
 $("#nchip").onclick=function(){var st=NX.state;if(st==="ready"||st==="err")connect();else if(st==="on"){renderSet();show("set");}else if(NX.msg)toast(NX.msg);else toast("目前显示示范资料");};
 
-renderCourt();show("court");runGate();initNotion();
-})();
+/* ================= 书桌 ================= */
+var D={cat:null};
+var PCOL=["#efe8d8","#c8d5c2","#bfd0d4","#e2c48c","#d2ddcd","#e3d3c3","#cbd3df","#efe8d8"];
+function pushRecent(bid,p){var bk=book(bid);if(!bk)return;
+  if(!(S.recent&&S.recent.length)&&S.last&&S.last.book!==bid){var lb=book(S.last.book);if(lb)S.recent=[{id:S.last.book,t:lb.t,a:lb.a||"",c:lb.c,g:lb.g,notion:!!lb.notion,p:S.last.p||0,n:lb.p?lb.p.length:0,ts:Date.now()-1}];}S.recent=(S.recent||[]).filter(function(r){return r.id!==bid;});
+  S.recent.unshift({id:bid,t:bk.t,a:bk.a||"",c:bk.c,g:bk.g,notion:!!bk.notion,p:p||0,n:bk.p?bk.p.length:0,ts:Date.now()});S.recent=S.recent.slice(0,9);}
+function ensureBook(r){if(book(r.id))return book(r.id);if(!r.notion)return null;
+  NB[r.id]={t:r.t,a:r.a||"Notion 书摘参考库",c:r.c||PAL[0][0],g:r.g||PAL[0][1],intro:"来自你的 Notion 书摘参考库。",p:null,ch:"",src:r.id,notion:true,full:r.t};return NB[r.id];}
+function deskShelves(){var out=[],titles=NX.on?{alex:"心理",castle:"成长",crystal:"灵性"}:{alex:"亚历山大",castle:"古堡",crystal:"水晶洞窟"};
+  ["alex","castle","crystal"].forEach(function(rid){var shs=shelvesFor(rid);if(NX.on)shs=shs.filter(function(x){return !x.local;});out.push({group:titles[rid],rid:rid,items:shs.map(function(x,k){x.rid=rid;x.k=k;x.key=rid+":"+k;return x;})});});return out;}
+function findShelf(key){var r=null;deskShelves().forEach(function(g){g.items.forEach(function(x){if(x.key===key)r=x;});});return r;}
+function renderDesk(){
+  var el=$("#s-desk");if(!el)return;var groups=deskShelves();
+  var h='<header class="dk-top"><span class="wordmark">我的书房</span><span class="sp"></span><span id="nchipSlot"></span></header><div class="dk-grid">';
+  h+='<aside class="dk-side" aria-label="书架"><button data-dcat="" aria-current="'+(!D.cat)+'"><span class="g">桌</span>书桌</button>';
+  groups.forEach(function(g){h+='<h5>'+esc(g.group)+'</h5>'+g.items.map(function(x){var n=x.ids&&x.ids.length;return '<button data-dcat="'+x.key+'" aria-current="'+(D.cat===x.key)+'"><span class="g">'+esc(x.glyph)+'</span>'+esc(x.name)+(n?'<span class="n">'+n+'</span>':'')+'</button>';}).join("");});
+  h+='</aside><main class="dk-board" id="dkBoard">'+(D.cat?shelfBoard(findShelf(D.cat)):pinBoard())+'</main>';
+  var nbl=notebooks().slice(0,6);
+  h+='<aside class="dk-cab"><div class="cab"><div class="cab-folders" aria-hidden="true">'+PCOL.slice(0,6).map(function(c){return '<i style="--fc:'+c+'"></i>';}).join("")+'</div><h4>研读本 · 档案柜</h4>'+
+    (nbl.length?nbl.map(function(n){var cnt=n.local?(nbById(n.key.slice(2))||{chs:[]}).chs.reduce(function(a,c){return a+c.items.length;},0):NX.notes.filter(function(x){return x.nb===n.title;}).length;return '<button class="drawer" data-dnb="'+esc(n.key)+'"><span class="plate">'+esc(n.title)+'</span><small>'+cnt+'</small><span class="h" aria-hidden="true"></span></button>';}).join(""):'<button class="drawer" data-dnb=""><span class="plate">还没有研读本</span><span class="h"></span></button>')+
+    (notebooks().length>6?'<button class="drawer" data-dnb=""><span class="plate">全部研读本 ›</span><span class="h"></span></button>':'')+'</div></aside>';
+  var ns=myNotes().slice(0,4),qs=allQuotes(),q=qs.length?qs[new Date().getDate()%qs.length]:null;
+  h+='<div class="dk-surface"><button class="nbk" id="dkNotes"><div class="pg"><h3>我的心得</h3><small>'+myNotes().length+' 则心得与划线 · 点开看全部</small>'+(ns[0]?'<p class="ln" style="margin-top:14px">'+esc(ns[0].text)+'</p>':'<p class="ln" style="margin-top:14px">读书时点任何一段，就能写下心得。</p>')+'</div><div class="pg">'+ns.slice(1).map(function(n){return '<p class="ln">'+esc(n.text)+'<em>《'+esc(n.bt)+'》</em></p>';}).join("")+'</div></button>'+
+    '<button class="cbox" id="dkCards"><div class="cards" aria-hidden="true"><i style="--cc:#efe8d8;--r:-4deg"></i><i style="--cc:#c8d5c2;--r:2deg"></i><i style="--cc:#e2c48c;--r:-1deg"></i></div><b>金句卡</b>'+(q?'<span class="q">'+esc(q.text)+'</span>':'')+'</button></div></div>';
+  el.innerHTML=h;
+  var nc=$("#nchip");if(nc)$("#nchipSlot").appendChild(nc);
+  $$("[data-dcat]",el).forEach(function(b){b.onclick=function(){D.cat=b.dataset.dcat||null;var x=D.cat&&findShelf(D.cat);
+    if(x&&!x.local&&x.state==="idle")loadShelf(x.cat).then(function(){if(current==="desk")renderDesk();});renderDesk();window.scrollTo(0,0);};});
+  $$("[data-dnb]",el).forEach(function(b){b.onclick=function(){if(b.dataset.dnb)curNb=b.dataset.dnb;renderNB();show("nb");};});
+  $$("[data-rec]",el).forEach(function(b){b.onclick=function(){var r=(S.recent||[]).filter(function(x){return x.id===b.dataset.rec;})[0];if(!r)return;if(!ensureBook(r)){toast("这本书现在不在书房里");return;}openReader(r.id,r.p);};});
+  $("#dkNotes").onclick=notesModal;
+  $("#dkCards").onclick=function(){renderCard(q||undefined);show("card");};
+  bindShelf(el);
+  requestAnimationFrame(pinWires);
+}
+function pinBoard(){
+  var rec=(S.recent||[]).filter(function(r){return r.notion?NX.on||true:!!book(r.id);});
+  if(!rec.length&&S.last&&book(S.last.book))rec=[{id:S.last.book,t:book(S.last.book).t,a:book(S.last.book).a,c:book(S.last.book).c,p:S.last.p,n:book(S.last.book).p?book(S.last.book).p.length:0}];
+  if(!rec.length)return '<div class="pins"><div class="board-empty">书桌还是空的。<br>从左边挑一个书架，找一本书开始读，它就会出现在这里。</div></div>';
+  var now=rec[0],others=rec.slice(1,9),pct=now.n?Math.min(100,Math.round((now.p+1)/now.n*100)):0;
+  var h='<svg class="w" aria-hidden="true"></svg><div class="pins">';
+  h+='<button class="pin now" data-rec="'+esc(now.id)+'" style="--pc:#efe8d8;--bc:'+(now.c||"#6f8a78")+'"><span class="strip"></span><span class="k">正在阅读</span><b>'+esc(now.t)+'</b><small>'+esc(now.a||"")+'</small><div class="bar"><i style="width:'+pct+'%"></i></div><small style="margin-bottom:12px">读到第 '+(now.p+1)+' 段'+(now.n?' · 共 '+now.n+' 段':'')+'</small><span class="go">接着读 ›</span></button>';
+  var cells=[[1,1],[1,2],[1,3],[2,1],[2,3],[3,1],[3,2],[3,3]];
+  others.forEach(function(r,k){h+='<button class="pin" data-rec="'+esc(r.id)+'" style="grid-row:'+cells[k][0]+';grid-column:'+cells[k][1]+';--pc:'+PCOL[(k+1)%PCOL.length]+';--bc:'+(r.c||"#6f8a78")+'"><span class="strip"></span><span class="k">最近阅读</span><b>'+esc(r.t)+'</b><small>读到第 '+(r.p+1)+' 段</small></button>';});
+  return h+'</div>';
+}
+function shelfBoard(x){if(!x)return pinBoard();
+  var h='<div class="dk-shelfhead"><h2>'+esc(x.name)+'</h2><span>'+(x.ids?x.ids.length:0)+' 本'+(x.more?'（只显示前 100 本）':'')+'</span><button data-dcat="">‹ 回书桌</button></div><div class="dshelf">';
+  if(!x.local&&(x.state==="loading"||x.state==="idle"))h+='<div class="shelf-msg">正在从 Notion 取书…</div>';
+  else if(!x.local&&x.state==="err")h+='<div class="shelf-msg">'+esc(x.msg)+'</div>';
+  else if(!x.ids.length)h+='<div class="shelf-msg">这一类还没有书</div>';
+  else x.ids.forEach(function(bid,k){var bk=book(bid);if(!bk)return;var t=spineTitle(bk.t),n=t.length;if(n>16){t=t.slice(0,15)+"…";n=16;}
+    var two=n>7,w=two?84:Math.max(58,Math.min(66,40+n*3)),hh=Math.max([236,252,228,246,260][(bid.length+k)%5],two?280:0);
+    h+='<div class="sl"><button class="spine" data-book="'+esc(bid)+'" style="--w:'+w+'px;--h:'+hh+'px;--c:'+bk.c+';--gilt:'+(bk.g||"#e0c27a")+'" aria-label="《'+esc(bk.t)+'》"><span class="tt'+(two?' two':'')+'">'+esc(t)+'</span></button></div>';});
+  return h+'</div>';}
+function pinWires(){var bd=$("#dkBoard"),sv=bd&&$("svg.w",bd);if(!sv||getComputedStyle(sv).display==="none")return;var now=$(".pin.now",bd);if(!now)return;
+  function c(e){var x=0,y=0,o=e;while(o&&o!==bd){x+=o.offsetLeft;y+=o.offsetTop;o=o.offsetParent;}return {x:x+e.offsetWidth/2,y:y+e.offsetHeight/2};}
+  var a=c(now),h="";sv.setAttribute("viewBox","0 0 "+bd.offsetWidth+" "+bd.offsetHeight);
+  $$(".pin:not(.now)",bd).forEach(function(p){var b=c(p);h+='<line x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'" stroke="rgba(239,232,216,.35)" stroke-width="1.5"/><circle cx="'+b.x+'" cy="'+b.y+'" r="4" fill="#d5a659"/>';});
+  sv.innerHTML=h+'<circle cx="'+a.x+'" cy="'+a.y+'" r="5" fill="#d5a659"/>';}
+window.addEventListener("resize",function(){if(current==="desk")pinWires();});
+function myNotes(){var out=[];
+  if(NX.on)NX.notes.slice().reverse().forEach(function(n){if(n.kind==="图表"||n.kind==="原文修改")return;var t=n.note||n.text;if(!t)return;out.push({text:t,bt:String(n.bookTitle||(book(n.book)&&book(n.book).t)||"").split("／")[0],book:n.book,p:n.p,hl:!n.note});});
+  else{Object.keys(S.pnotes||{}).forEach(function(b){(S.pnotes[b]||[]).forEach(function(x){out.push({text:x.note,bt:book(b)?book(b).t:"",book:b,p:x.p});});});
+    Object.keys(S.hl||{}).forEach(function(b){var bk=book(b);(S.hl[b]||[]).forEach(function(x){if(bk&&bk.p&&bk.p[x.p])out.push({text:bk.p[x.p].t.slice(x.s,x.e),bt:bk.t,book:b,p:x.p,hl:true});});});}
+  return out;}
+function notesModal(){var ns=myNotes();
+  openModal('<h2 class="t">我的心得与划线</h2><div class="sub">'+ns.length+' 则 · 点「前往」回到那一段</div><div class="notes-list">'+(ns.length?ns.slice(0,80).map(function(n,i){return '<div class="it"><div><p>'+(n.hl?'<span style="color:var(--moon)">划线　</span>':'')+esc(n.text)+'</p><small>《'+esc(n.bt)+'》第 '+((+n.p||0)+1)+' 段</small></div><button class="btn" data-go="'+i+'">前往</button></div>';}).join(""):'<p class="sub">还没有心得。读书时点任何一段，就能在右侧写下想法。</p>')+'</div><div class="actions"><button class="btn" id="nmClose">关闭</button></div>');
+  $("#nmClose").onclick=closeModal;
+  $$("[data-go]").forEach(function(b){b.onclick=function(){var n=ns[+b.dataset.go];closeModal();if(!book(n.book))ensureBook({id:n.book,t:n.bt,notion:true});openReader(n.book,n.p);};});}
+function renderCourt(){renderDesk();}
+function renderRoom(){renderDesk();}
 
+renderDesk();show("desk");initNotion();
+})();
 </script>
