@@ -345,7 +345,7 @@ mark.c-green{background:rgba(100,175,115,.38)}
 .mynotes .mn{padding:10px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.85;white-space:pre-wrap}
 .mynotes textarea{margin-top:8px;min-height:70px}
 .para{margin:0 -10px var(--pgap,.7em)!important}
-.ptext{line-height:var(--plh,2)!important}
+.ptext{line-height:var(--plh,1.68)!important}
 .insbar{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
 .insbar button{font-size:12.5px;color:#8a5a2a;border:1px dashed rgba(138,90,42,.45);border-radius:999px;padding:3px 12px;letter-spacing:.04em}
 .reader.p-night .insbar button{color:var(--moon);border-color:rgba(241,223,174,.35)}
@@ -1581,7 +1581,7 @@ function renderReader(){
   $("#paper").addEventListener("mouseout",function(e){if(e.target.closest(".term"))$("#tip").hidden=true;});
 }
 document.addEventListener("click",function(e){var a=$("#aa");if(a&&!a.hidden&&!e.target.closest("#aa")&&e.target.id!=="aaBtn")a.hidden=true;});
-function spacing(){var g={s:".35em",m:".7em",l:"1.15em"}[S.gap||"m"],l={s:"1.8",m:"2",l:"2.25"}[S.lh||"m"];return "--pgap:"+g+";--plh:"+l;}
+function spacing(){var g={s:".35em",m:".7em",l:"1.15em"}[S.gap||"m"],l={s:"1.5",m:"1.68",l:"1.85"}[S.lh||"m"];return "--pgap:"+g+";--plh:"+l;}
 function seg(k,v,l){var cur=S[k]||(k==="gap"||k==="lh"?"m":"");return '<button data-'+k+'="'+v+'" aria-pressed="'+(cur===v)+'">'+l+'</button>';}
 function findRoom(bid){
   var r=null;
