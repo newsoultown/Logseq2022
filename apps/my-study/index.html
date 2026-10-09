@@ -2276,18 +2276,21 @@ function ttsSync(){var b=$("#ttsPlay");if(b){b.textContent=TTS.playing?"❚❚ �
   var m=$("#ttsMode");if(m){var mo=ttsMode(),man=ttsMan();m.textContent=mo==="audio"?"有声书 · "+(man.voice||"晓晓"):mo==="speech"?"装置语音":"尚未制作有声书";}}
 /* —— 请 Claude 制作有声书 —— */
 function ttsShowMake(){var box=$("#ttsMake");if(!box)return;box.hidden=false;var bk=book(R.book),req=S.audioReq&&S.audioReq[bookKey(bk)];
-  $("#ttsMakeMsg").textContent=req?("已在 "+new Date(req).toLocaleString()+" 送出制作请求，通常 5–10 分钟完成；完成后关掉 App 重新打开即可。"):"这本书还没有有声书。按下方按钮，Claude 会用「晓晓」的声音把整本书摘录成语音档（约 5–10 分钟）。";}
+  $("#ttsMakeMsg").textContent=req?("已在 "+new Date(req).toLocaleString()+" 送出，Claude 会自动制作（通常 5–10 分钟；若当下没接到通知，也会在 3 小时内的定时检查中自动补做）。完成后关掉 App 重新打开即可。"):"这本书还没有有声书。按下方按钮，Claude 会用「晓晓」的声音把整本书摘录成语音档（约 5–10 分钟）。";}
 function ttsRequest(){var bk=book(R.book);if(!bk)return;var key=bookKey(bk),ps=ttsParas(),btn=$("#ttsMakeGo");
   var payload={kind:"mystudy-audiobook",v:1,key:key,title:bk.t,voice:"zh-CN-XiaoxiaoNeural",script:scr(),at:new Date().toISOString(),
     paras:ps.map(function(el){var t=el.textContent||"";return {h:ttsHash(t),t:t,s:ttsSplit(t).map(function(x){return [x.a,x.b];})};})};
   var json=JSON.stringify(payload);btn.disabled=true;btn.textContent="送出中…";
-  var fail=function(why){btn.disabled=false;btn.textContent="🎙 请 Claude 制作有声书";
-    var txt="请帮我制作《"+bk.t+"》的有声书（书 id："+key+"）";$("#ttsMakeMsg").innerHTML="自动送出没有成功（"+esc(why)+"）。请复制下面这句话，贴到和 Claude 的对话里：<br><b class=\"tts-copy\">"+esc(txt)+"</b>";};
+  var key2=key,sentAny=false,why=[];
   claude.use("assets").then(function(assets){if(!assets)throw {code:"no_assets"};return assets.upload(new Blob([json],{type:"application/json"}));})
-   .then(function(a){var msg="【我的书房·有声书制作请求】\n书名：《"+bk.t+"》\n书 id："+key+"\n内容素材 asset："+a.id+"\n段落数："+payload.paras.length+"，字数："+payload.paras.reduce(function(n,p){return n+p.t.length;},0)+"\n（请依 apps/my-study/tts/README.md 的流程制作并发布）";
-     return (NX.mcp?Promise.resolve(NX.mcp):claude.use("mcp")).then(function(m){if(!m)throw {code:"no_mcp"};return m.callTool("Claude Code Remote","send_message",{session_id:CCR_SESSION,message:msg});});})
-   .then(function(){S.audioReq=S.audioReq||{};S.audioReq[key]=Date.now();save();btn.textContent="✓ 已送出";ttsShowMake();toast("已请 Claude 制作有声书，约 5–10 分钟");})
-   .catch(function(e){fail((e&&(e.code||e.message))||"未知原因");});}
+   .then(function(a){var info={status:"pending",key:key2,title:bk.t,asset:a.id,paras:payload.paras.length,chars:payload.paras.reduce(function(n,p){return n+p.t.length;},0),at:payload.at};
+     var msg="【我的书房·有声书制作请求】\n书名：《"+bk.t+"》\n书 id："+key2+"\n内容素材 asset："+a.id+"\n段落数："+info.paras+"，字数："+info.chars+"\n（请依 apps/my-study/tts/README.md 的流程制作并发布）";
+     var q=claude.use("db").then(function(db){if(!db)throw {code:"no_db"};return db.doc("audioReq/"+key2).set(info);}).then(function(){sentAny=true;},function(e){why.push("排队:"+((e&&(e.code||e.message))||"?"));});
+     var m=(NX.mcp?Promise.resolve(NX.mcp):claude.use("mcp")).then(function(mm){if(!mm)throw {code:"no_mcp"};return mm.callTool("Claude Code Remote","send_message",{session_id:CCR_SESSION,message:msg});})
+       .then(function(){sentAny=true;},function(e){why.push("通知:"+((e&&(e.code||e.message))||"?"));});
+     return Promise.all([q,m]);})
+   .then(function(){if(!sentAny)throw {code:why.join("；")||"未知"};S.audioReq=S.audioReq||{};S.audioReq[key2]=Date.now();save();btn.textContent="✓ 已送出";ttsShowMake();toast("已请 Claude 制作有声书，约 5–10 分钟");})
+   .catch(function(e){btn.disabled=false;btn.textContent="🎙 再试一次";$("#ttsMakeMsg").textContent="这次没有送出成功（"+((e&&(e.code||e.message))||"未知原因")+"），请稍后再按一次。";});}
 function ttsMount(){var el=$("#s-reader");if(!el)return;var bar=document.createElement("div");bar.className="tts-bar glass";bar.id="ttsBar";bar.hidden=!TTS.on;
   var rate=S.ttsRate||1;
   bar.innerHTML='<div class="tts-make" id="ttsMake" hidden><p id="ttsMakeMsg"></p><button class="btn gold" id="ttsMakeGo">🎙 请 Claude 制作有声书</button></div>'+'<div class="tts-row"><button class="btn" id="ttsPrev" aria-label="上一句">⏮</button><button class="btn gold" id="ttsPlay">▶ 播放</button><button class="btn" id="ttsNext" aria-label="下一句">⏭</button>'+
