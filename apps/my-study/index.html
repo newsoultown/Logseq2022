@@ -612,6 +612,9 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 .tts-make{border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:10px}
 .tts-make .btn{justify-self:start;font-size:15px;padding:9px 16px}
 @media (max-width:520px){.tts-bar{padding:9px 11px;gap:6px}.tts-make p{font-size:12.5px}}
+/* 书脊书名加粗、更明显 */
+.dshelf .spine.mod .tt{font-weight:900!important;letter-spacing:.05em!important;font-size:calc(17px * var(--fs,1))!important;-webkit-font-smoothing:antialiased}
+@media (max-width:760px){.dshelf .spine.mod .tt{font-size:calc(16px * var(--fs,1))!important}}
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -2175,7 +2178,7 @@ function modernCover(bk,bid){var hs=0,k=String(bid||bk.t);for(var z=0;z<k.length
   var v=hs%4,c1=MC_BG[hs%MC_BG.length],c2=MC_ACC[(hs>>3)%MC_ACC.length],st=subTitle(bk.t),au=String(bk.a||"").replace(/Notion 书摘参考库/,"").split(/[、,，]/)[0];
   return '<div class="cover mc mc'+v+'" style="--c1:'+c1+';--c2:'+c2+'"><i class="mc-art"></i><div class="mc-tx"><b>'+esc(shortTitle(bk.t))+'</b>'+(st?'<small>'+esc(st)+'</small>':'')+'</div>'+(au?'<em>'+esc(au)+'</em>':'')+'</div>';}
 /* 现代印刷书脊：[底色, 字色, 点缀色(可省)] —— 以浅中间色为主，字与底对比清楚 */
-var SPINES=[["#e8dfcf","#2a2620"],["#d7e0d3","#24332b"],["#d5dfe6","#22303c"],["#eadad2","#3a2222"],["#ddd6e6","#2c2540"],["#efe7d2","#3a3020"],["#cfd9cf","#1f2e25"],["#e6d4bd","#3a2a18"],
+var SPINES=[["#e8dfcf","#1c1915"],["#d7e0d3","#16241c"],["#d5dfe6","#15212b"],["#eadad2","#2c1616"],["#ddd6e6","#1f1a30"],["#efe7d2","#2a2214"],["#cfd9cf","#13201a"],["#e6d4bd","#2a1e10"],
   ["#f2efe8","#2a2620","#8b4a4a"],["#f2efe8","#22303c","#4a6378"],["#8fa79a","#f7f3ea"],["#9aa8b8","#f7f3ea"],["#b5927d","#fbf6ee"],["#a99bb8","#fbf6ee"],["#7f9488","#f7f3ea"],["#c2a878","#2a2216"]];
 var MC_BG=["#dccdb8","#c9d6c8","#c8d5de","#e0cdc6","#d8d0e2","#e6dcc6","#c6d1c0","#ddd3c9","#cfdad6","#e4d2bd"];
 var MC_ACC=["#8a5a3c","#4f6b5a","#4a6378","#8b4a4a","#6a5682","#7a6a3a"];
