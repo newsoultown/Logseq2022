@@ -6,6 +6,12 @@
 - 图表样张：https://claude.ai/artifact/K3bPJqngKgUNyyqntqNj5J（chart-specimens.html）
 - 图表引擎与 `skills/knowledge-chart-studio/assets/engine.js` 是同一份；改引擎时两边一起更新。
 
+## v1.1（2026-10-09）
+- claude.ai 的 App 环境挡掉浏览器内建语音，朗读改以「有声书」语音档为主（微软神经语音・晓晓）
+  - 阅读页按「🔊 朗读」→ 尚未制作的书会出现「🎙 请 Claude 制作有声书」，App 上传书文并透过 Claude Code Remote 通知制作对话
+  - 制作流程见 `tts/README.md`（`build_audio.py` 逐句合成＋时间轴，`install_manifest.py` 写入 App）
+  - 播放：速度 0.5×–2×（不变声）、上一句／下一句、点文中任一句即从该句念、每本书记住念到的位置
+
 ## v1.0（2026-10-09）
 - 朗读：阅读页「🔊 朗读」，用装置内建中文语音逐句念（Web Speech API）
   - 跟读：正在念的句子以金色底标出，段落左侧金线，自动卷动跟上
