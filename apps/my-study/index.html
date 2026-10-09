@@ -2176,6 +2176,9 @@ function coverOf(bk){var m=String(bk&&bk.src||"").replace(/-/g,"").match(/[0-9a-
 /* ================= 朗读（Web Speech API，逐句念＋跟读高亮） ================= */
 var TTS={on:false,playing:false,p:0,s:0,sents:[],voices:[],hl:null};
 var TTS_RATES=[0.75,0.9,1,1.15,1.3,1.5,1.75,2];
+function ttsDiag(){var ua=navigator.userAgent,env=/Electron/i.test(ua)?"Claude 桌面版":/iPhone|iPad/i.test(ua)?(/Safari\//.test(ua)&&!/CriOS|FxiOS/.test(ua)?"iPhone/iPad Safari":"iPhone/iPad App 内建视窗"):/Android/i.test(ua)?"Android":/Edg\//.test(ua)?"Edge":/Chrome\//.test(ua)?"Chrome":/Safari\//.test(ua)?"Safari":"未知";
+  var m="这里没有可用的语音引擎（"+env+"；speechSynthesis="+("speechSynthesis" in window)+"，Utterance="+("SpeechSynthesisUtterance" in window)+"）。请改用电脑的 Chrome／Edge，或 iPhone 的 Safari 打开 claude.ai 上的这个 App";
+  toast(m);try{console.warn(m,ua);}catch(e){}}
 function ttsOK(){return "speechSynthesis" in window&&"SpeechSynthesisUtterance" in window;}
 function ttsLang(){return scr()==="t"?"zh-TW":"zh-CN";}
 function ttsLoadVoices(){if(!ttsOK())return;var v=speechSynthesis.getVoices()||[];
@@ -2218,7 +2221,7 @@ function ttsSpeak(){if(!TTS.playing)return;var ps=ttsParas();if(TTS.p>=ps.length
   u.onend=function(){if(tok!==ttsTok||!TTS.playing)return;TTS.s++;ttsSpeak();};
   u.onerror=function(e){if(tok!==ttsTok||!TTS.playing)return;if(e.error==="interrupted"||e.error==="canceled")return;TTS.s++;setTimeout(ttsSpeak,80);};
   speechSynthesis.speak(u);}
-function ttsPlay(){if(!ttsOK()){toast("这个浏览器不支持朗读，请改用 Chrome、Edge 或 Safari");return;}
+function ttsPlay(){if(!ttsOK()){ttsDiag();return;}
   TTS.playing=true;speechSynthesis.cancel();ttsTok++;setTimeout(ttsSpeak,60);ttsSync();}
 function ttsPause(){TTS.playing=false;ttsTok++;if(ttsOK())speechSynthesis.cancel();ttsSync();}
 function ttsStop(hide){TTS.playing=false;ttsTok++;if(ttsOK())speechSynthesis.cancel();ttsClearHL();if(hide){TTS.on=false;var b=$("#ttsBar");if(b)b.hidden=true;}ttsSync();}
@@ -2238,7 +2241,7 @@ function ttsMount(){var el=$("#s-reader");if(!el)return;var bar=document.createE
     '<label class="tts-l">声音</label><select id="ttsVoice"></select></div>'+
     '<div class="tts-tip">念到哪一句，文中就会标出哪一句 · 点任何一段再按「从这段念」可以跳过去 <button class="btn" id="ttsHere">从这段念</button></div>';
   el.appendChild(bar);ttsFillVoices($("#ttsVoice"));
-  $("#ttsBtn").onclick=function(){if(!ttsOK()){toast("这个浏览器不支持朗读，请改用 Chrome、Edge 或 Safari");return;}
+  $("#ttsBtn").onclick=function(){if(!ttsOK()){ttsDiag();return;}
     if(TTS.on){ttsStop(true);return;}TTS.on=true;bar.hidden=false;if(TTS.p>=ttsParas().length)TTS.p=0;TTS.p=ttsStartIndex();TTS.s=0;ttsLoadPara();ttsShow();ttsPlay();};
   $("#ttsPlay").onclick=function(){if(TTS.playing)ttsPause();else{ttsLoadPara();ttsPlay();}};
   $("#ttsPrev").onclick=function(){ttsJump(-1);};$("#ttsNext").onclick=function(){ttsJump(1);};
