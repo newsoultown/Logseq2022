@@ -10,7 +10,7 @@ App 里按「🎙 请 Claude 制作有声书」后，App 会：
 2. `pip install edge-tts`（若未安装），执行
    `python3 -I apps/my-study/tts/build_audio.py <请求.json> <输出资料夹>`
    声音：zh-CN-XiaoxiaoNeural（使用者选定的「晓晓」）。
-3. 把输出的 `<key>_partN.mp3` 用 `Artifact publish asset:true` 上传到我的书房素材库，记下 `/_blob/<id>`。
+3. 把输出的 `<key>_partN.mp4`（素材库不收 mp3，脚本已转成 AAC/MP4） 用 `Artifact publish asset:true` 上传到我的书房素材库，记下 `/_blob/<id>`。
 4. `python3 -I apps/my-study/tts/install_manifest.py apps/my-study/index.html <输出>/<key>.json /_blob/<id1> [...]`
 5. 发布 App（同一个档案路径／网址），提交并推送；可删除那份请求 JSON 素材。
 6. 用 ArtifactData 把 `audioReq/<书 id>` 的 status 改成 "done"（附 done_at），以免定时检查重做。

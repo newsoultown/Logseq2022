@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """我的书房 · 有声书制作
 输入：App 上传的请求 JSON（{key,title,voice,paras:[{h,t,s:[[a,b],...]}]}）
-输出：<out>/<key>_partN.mp3（每档 ≤ 14MB）＋ <out>/<key>.json（给 App 的时间轴）
+输出：<out>/<key>_partN.mp4（AAC，每档约 ≤ 15MB）＋ <out>/<key>.json（给 App 的时间轴）
 用法：python3 -I build_audio.py request.json outdir
 需要：pip install edge-tts（在 Claude 云端环境需用代理 CA，见下方 certifi 设定）
 """
-import asyncio, json, os, re, sys
+import asyncio, json, os, re, subprocess, sys
 try:
     import certifi
     if os.path.exists("/root/.ccr/ca-bundle.crt"):
@@ -63,8 +63,12 @@ async def main(req_path, out):
         parts.append(bytes(cur))
     files = []
     for i, b in enumerate(parts):
-        fn = f"{key}_part{i+1}.mp3"
-        open(os.path.join(out, fn), "wb").write(b); files.append(fn)
+        mp3 = os.path.join(out, f"{key}_part{i+1}.mp3")
+        open(mp3, "wb").write(b)
+        fn = f"{key}_part{i+1}.mp4"   # 素材库上传只接受 mp4：转成 AAC/MP4（时长不变）
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", mp3, "-c:a", "aac", "-b:a", "48k", "-ac", "1",
+                        "-movflags", "+faststart", os.path.join(out, fn)], check=True)
+        os.remove(mp3); files.append(fn)
     man = {"v": 1, "key": key, "title": req.get("title", ""), "voice": "晓晓", "files": files,
            "paras": paras, "total": round(sum(len(b) for b in parts) / BYTES_PER_SEC, 1)}
     json.dump(man, open(os.path.join(out, key + ".json"), "w", encoding="utf-8"), ensure_ascii=False)
