@@ -2122,7 +2122,7 @@ function shelfBoard(x){if(!x)return pinBoard();
   else if(!x.local&&x.state==="err")h+='<div class="shelf-msg">'+esc(x.msg)+'</div>';
   else if(!x.ids.length)h+='<div class="shelf-msg">这一类还没有书</div>';
   else x.ids.forEach(function(bid,k){var bk=book(bid);if(!bk)return;var t=shortTitle(bk.t),n=t.length;
-    var two=false,fs=n<=6?1:(n<=8?.92:.8),w=Math.max(58,Math.min(70,44+n*3)),hh=Math.min(316,Math.max([236,252,228,246,260][(bid.length+k)%5],n>6?196+n*12:0));
+    var two=false,fs=n<=6?1:(n<=8?.92:.8),w=Math.max(58,Math.min(70,44+n*3)),hh=[288,296,284,300,292][(bid.length+k)%5];
     var hs=0;for(var z=0;z<bid.length;z++)hs=(hs*31+bid.charCodeAt(z))>>>0;var h2=Math.imul(hs^(hs>>>15),2246822519)>>>0;h2=Math.imul(h2^(h2>>>13),3266489917)>>>0;var sp=SPINES[h2%SPINES.length],mv=(h2>>>8)%4,ac=MC_ACC[(h2>>>12)%MC_ACC.length];
     h+='<div class="sl"><button class="spine mod mv'+mv+'" data-book="'+esc(bid)+'" style="--w:'+w+'px;--h:'+hh+'px;--fs:'+fs+';--c1:'+sp[0]+';--tc:'+sp[1]+';--c2:'+(sp[2]||ac)+'" aria-label="《'+esc(bk.t)+'》"><span class="tt'+(two?' two':'')+'">'+esc(t)+'</span></button></div>';});
   return h+'</div>';}
