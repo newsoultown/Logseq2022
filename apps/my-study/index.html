@@ -614,7 +614,8 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 @media (max-width:520px){.tts-bar{padding:9px 11px;gap:6px}.tts-make p{font-size:12.5px}}
 /* 书脊书名加粗、更明显 */
 .dshelf .spine.mod .tt{font-weight:900!important;letter-spacing:.05em!important;font-size:calc(17px * var(--fs,1))!important;-webkit-font-smoothing:antialiased}
-@media (max-width:760px){.dshelf .spine.mod .tt{font-size:calc(16px * var(--fs,1))!important}}
+@media (max-width:760px){.dshelf .spine.mod .tt{font-size:calc(16px * var(--fs,1))!important;-webkit-text-stroke:.55px currentColor;paint-order:stroke fill}}
+@supports (-webkit-touch-callout:none){.dshelf .spine.mod .tt{-webkit-text-stroke:.55px currentColor}}
 </style>
 
 <div class="gate" id="gate" hidden>
