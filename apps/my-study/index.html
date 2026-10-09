@@ -608,6 +608,10 @@ body.nav-off .nav{transform:translate(-50%,160%);opacity:0;pointer-events:none}
 .tts-make{display:grid;gap:8px;padding:6px 2px}.tts-make p{margin:0;font-size:13.5px;line-height:1.6}
 .tts-copy{display:inline-block;margin-top:6px;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.1);user-select:all}
 .reader .ptext{cursor:text}
+.tts-bar{bottom:calc(22px + env(safe-area-inset-bottom,0px));max-height:calc(100vh - 120px);overflow:auto}
+.tts-make{border-bottom:1px solid rgba(255,255,255,.12);padding-bottom:10px}
+.tts-make .btn{justify-self:start;font-size:15px;padding:9px 16px}
+@media (max-width:520px){.tts-bar{padding:9px 11px;gap:6px}.tts-make p{font-size:12.5px}}
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -2286,10 +2290,10 @@ function ttsRequest(){var bk=book(R.book);if(!bk)return;var key=bookKey(bk),ps=t
    .catch(function(e){fail((e&&(e.code||e.message))||"未知原因");});}
 function ttsMount(){var el=$("#s-reader");if(!el)return;var bar=document.createElement("div");bar.className="tts-bar glass";bar.id="ttsBar";bar.hidden=!TTS.on;
   var rate=S.ttsRate||1;
-  bar.innerHTML='<div class="tts-row"><button class="btn" id="ttsPrev" aria-label="上一句">⏮</button><button class="btn gold" id="ttsPlay">▶ 播放</button><button class="btn" id="ttsNext" aria-label="下一句">⏭</button>'+
+  bar.innerHTML='<div class="tts-make" id="ttsMake" hidden><p id="ttsMakeMsg"></p><button class="btn gold" id="ttsMakeGo">🎙 请 Claude 制作有声书</button></div>'+'<div class="tts-row"><button class="btn" id="ttsPrev" aria-label="上一句">⏮</button><button class="btn gold" id="ttsPlay">▶ 播放</button><button class="btn" id="ttsNext" aria-label="下一句">⏭</button>'+
     '<span class="tts-pos"><span id="ttsPos"></span><small id="ttsMode"></small></span><button class="btn" id="ttsClose" aria-label="关闭朗读">✕</button></div>'+
     '<div class="tts-row"><label class="tts-l">速度</label><input type="range" id="ttsRate" min="0" max="'+(TTS_RATES.length-1)+'" step="1" value="'+Math.max(0,TTS_RATES.indexOf(rate))+'"><b id="ttsRateV">'+rate+'×</b></div>'+
-    '<div class="tts-make" id="ttsMake" hidden><p id="ttsMakeMsg"></p><button class="btn gold" id="ttsMakeGo">🎙 请 Claude 制作有声书</button></div>'+
+    
     '<div class="tts-tip">点文中任何一句，就从那一句开始念 · 会记住每本书念到的位置</div>';
   el.appendChild(bar);
   $("#ttsBtn").onclick=function(){if(TTS.on){ttsStop(true);return;}TTS.on=true;bar.hidden=false;var sp=ttsStartPos();TTS.p=sp.p;TTS.s=sp.s;ttsLoadPara();ttsShow();
